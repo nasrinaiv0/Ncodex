@@ -1,0 +1,18 @@
+{
+  "_note": "SYNTHETIC data for offline tests ONLY; not a real market quote.",
+  "chain": "solana",
+  "mint": "So11111111111111111111111111111111111111112",
+  "source": "manual-reviewed",
+  "observed_at": "2026-11-06T01:59:55+00:00",
+  "quote_at": "2026-11-06T01:59:56+00:00",
+  "price_usd": "1.25",
+  "liquidity_usd": "100000",
+  "token_age_seconds": 7200,
+  "security": {
+    "top10_holder_pct": "25",
+    "developer_holder_pct": "2",
+    "honeypot": false,
+    "mint_authority_disabled": true,
+    "freeze_authority_disabled": true
+  }
+}

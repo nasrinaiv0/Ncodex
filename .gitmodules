@@ -1,0 +1,18 @@
+[submodule "upstream/gmgn-skills"]
+	path = upstream/gmgn-skills
+	url = https://github.com/GMGNAI/gmgn-skills.git
+[submodule "upstream/pumpfun-bonkfun-bot"]
+	path = upstream/pumpfun-bonkfun-bot
+	url = https://github.com/chainstacklabs/pumpfun-bonkfun-bot.git
+[submodule "upstream/sol-trade-sdk"]
+	path = upstream/sol-trade-sdk
+	url = https://github.com/0xfnzero/sol-trade-sdk.git
+[submodule "upstream/eliza"]
+	path = upstream/eliza
+	url = https://github.com/elizaOS/eliza.git
+[submodule "upstream/OpenAlice"]
+	path = upstream/OpenAlice
+	url = https://github.com/TraderAlice/OpenAlice.git
+[submodule "upstream/skills"]
+	path = upstream/skills
+	url = https://github.com/mattpocock/skills.git
