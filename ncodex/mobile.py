@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import secrets
 import threading
+import time
 import uuid
 from urllib.parse import urlsplit
 
@@ -23,6 +24,7 @@ from .pipeline import PaperDesk
 from .research import TradingAgentsBridge, normalize_research_request
 from .freqtrade_bridge import FreqtradeBridge
 from .chatgpt_connect import ChatGPTSignIn
+from .elevenlabs_voice import ElevenLabsVoice, VoiceUnavailable, VOICE_NAME, MAX_TEXT_CHARS
 from .schema import Candidate, decimal
 
 ASSETS = Path(__file__).resolve().parent.parent / "web"
@@ -99,13 +101,23 @@ class MobileServer(ThreadingHTTPServer):
 
     def __init__(self, address, db_path: str, token: str,
                  research: ResearchJobs | None = None,
-                 chatgpt_signin: ChatGPTSignIn | None = None):
+                 chatgpt_signin: ChatGPTSignIn | None = None,
+                 voice: ElevenLabsVoice | None = None):
         super().__init__(address, MobileHandler)
         self.db_path = db_path
         self.token = token
         self.paper_lock = threading.Lock()
         self.research = research or ResearchJobs()
         self.chatgpt_signin = chatgpt_signin or ChatGPTSignIn()
+        self.voice = voice or ElevenLabsVoice()
+        self.voice_enabled = (
+            len(token) >= 20 and bool(self.voice.configured())
+            and os.environ.get("NCODEX_ENABLE_ELEVENLABS_VOICE") == "1"
+        )
+        self.voice_lock = threading.Lock()
+        self.voice_request_day = ""
+        self.voice_request_count = 0
+        self.voice_last_call = 0.0
         # Owner-only feature. A paid plan never authorizes live trades.
         self.chatgpt_connect_enabled = (
             bool(token) and len(token) >= 20
@@ -134,7 +146,7 @@ class MobileHandler(BaseHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("X-Frame-Options", "DENY")
-        self.send_header("Cache-Control", "no-store" if content_type.startswith("application/json") else "public, max-age=120")
+        self.send_header("Cache-Control", "no-store" if (content_type.startswith("application/json") or content_type.startswith("audio/")) else "public, max-age=120")
         self.send_header("Content-Security-Policy",
                          "default-src 'self'; connect-src 'self'; img-src 'self' data:; "
                          "style-src 'self'; script-src 'self'; object-src 'none'; "
@@ -178,7 +190,13 @@ class MobileHandler(BaseHTTPRequestHandler):
         if not self._authorized():
             self._json(401, {"error": "access token required"})
             return
-        if path == "/api/chatgpt/status":
+        if path == "/api/voice/status":
+            self._json(200, {"provider": "ElevenLabs", "voice": VOICE_NAME,
+                             "enabled": self.server.voice_enabled,
+                             "humanoids": ["dirk", "ej"],
+                             "requires_owner_token": True,
+                             "browser_fallback_available": True})
+        elif path == "/api/chatgpt/status":
             result = {"enabled": self.server.chatgpt_connect_enabled}
             if self.server.chatgpt_connect_enabled:
                 result.update(self.server.chatgpt_signin.status())
@@ -239,6 +257,42 @@ class MobileHandler(BaseHTTPRequestHandler):
             return
         try:
             body = self._body()
+            if path == "/api/voice":
+                if not self.server.voice_enabled:
+                    self._json(503, {"error": "ElevenLabs voice is not configured on the server"})
+                    return
+                spoken = body.get("text")
+                humanoid = body.get("humanoid")
+                if humanoid not in ("dirk", "ej"):
+                    raise ValueError("Choose Dirk or EJ")
+                if not isinstance(spoken, str) or not 1 <= len(spoken.strip()) <= MAX_TEXT_CHARS:
+                    raise ValueError("Voice reply text is missing or too long")
+                if not self.server.voice_lock.acquire(blocking=False):
+                    self._json(429, {"error": "Voice generation already in progress"})
+                    return
+                try:
+                    today = datetime.now(timezone.utc).date().isoformat()
+                    if today != self.server.voice_request_day:
+                        self.server.voice_request_day = today
+                        self.server.voice_request_count = 0
+                    clock = time.monotonic()
+                    if clock - self.server.voice_last_call < 3 or self.server.voice_request_count >= 100:
+                        self._json(429, {"error": "Voice request limit reached; try again later"})
+                        return
+                    self.server.voice_last_call = clock
+                    self.server.voice_request_count += 1
+                    try:
+                        audio = self.server.voice.synthesize(spoken, humanoid)
+                    except VoiceUnavailable:
+                        self._json(502, {"error": "ElevenLabs voice unavailable; use device speech"})
+                        return
+                    self.send_response(200)
+                    self._headers("audio/mpeg", len(audio))
+                    self.end_headers()
+                    self.wfile.write(audio)
+                finally:
+                    self.server.voice_lock.release()
+                return
             if path.startswith("/api/chatgpt/"):
                 if not self.server.chatgpt_connect_enabled:
                     self._json(403, {"error": "ChatGPT connection disabled. Configure owner token and enable the service."})

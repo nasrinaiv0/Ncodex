@@ -48,6 +48,7 @@
   function setHumanoid(version, announce = false) {
     if (!Object.prototype.hasOwnProperty.call(humanoids, version)) return;
     const changed = version !== state.humanoid;
+    if (changed && typeof stopSpeaking === "function") stopSpeaking();
     state.humanoid = version;
     const bot = humanoids[version];
     document.body.dataset.humanoid = version;
@@ -174,7 +175,7 @@
     $("refresh").classList.add("loading");
     $("connection-label").textContent = "Checking";
     try {
-      const [paper, integrations] = await Promise.all([api("/api/paper"), api("/api/integrations")]);
+      const [paper, integrations, voice] = await Promise.all([api("/api/paper"), api("/api/integrations"), api("/api/voice/status")]);
       renderPaper(paper);
       const t = integrations.tradingagents || {};
       const f = integrations.freqtrade || {};
@@ -182,6 +183,7 @@
       $("settings-ta").textContent = t.ready_to_attempt ? "Ready to attempt*" : "Not connected";
       $("ft-status").textContent = f.connected && f.mode === "read-only dry-run" ? "Dry-run" : "Not connected";
       $("settings-ft").textContent = f.mode || "Not configured";
+      $("settings-voice").textContent = voice.enabled ? "Ncodex ready" : "Device speech fallback";
       $("connection-label").textContent = "Checked";
       $("utc-time").textContent = "LAST CHECK " + new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
     } catch (err) {
@@ -267,12 +269,28 @@
     const p = document.createElement("p");
     p.textContent = message;
     wrap.append(label,p);
+    if (role === "bot") lastAssistantReply = message;
     $("chat-messages").append(wrap);
     $("chat-messages").scrollTop = $("chat-messages").scrollHeight;
   }
-  function speak(text) {
-    if (!state.tts || !("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
+  let activeAudio = null;
+  let activeAudioURL = null;
+  let activeVoiceRequest = null;
+  let voiceEpoch = 0;
+  let lastAssistantReply = "";
+  function stopSpeaking() {
+    voiceEpoch += 1;
+    if (activeVoiceRequest) { activeVoiceRequest.abort(); activeVoiceRequest = null; }
+    if (activeAudio) { activeAudio.pause(); activeAudio.src = ""; activeAudio = null; }
+    if (activeAudioURL) { URL.revokeObjectURL(activeAudioURL); activeAudioURL = null; }
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
+    setExpression("idle");
+  }
+  function speakWithDevice(text) {
+    if (!state.tts || !("speechSynthesis" in window)) {
+      if (state.tts) toast("Speech playback is not available in this browser.");
+      return;
+    }
     const utterance = new SpeechSynthesisUtterance(text.slice(0, 1400));
     utterance.rate = state.humanoid === "dirk" ? 0.94 : 1.08;
     utterance.pitch = state.humanoid === "dirk" ? 0.88 : 1.12;
@@ -281,11 +299,60 @@
     utterance.onerror = () => setExpression("idle");
     speechSynthesis.speak(utterance);
   }
+  async function speak(text) {
+    lastAssistantReply = text;
+    if (!state.tts) return;
+    stopSpeaking();
+    const epoch = voiceEpoch;
+    const profile = state.humanoid;
+    let controller = null;
+    try {
+      const status = await api("/api/voice/status");
+      if (!state.tts || epoch !== voiceEpoch) return;
+      if (!status.enabled) { speakWithDevice(text); return; }
+      controller = new AbortController();
+      activeVoiceRequest = controller;
+      const deadline = setTimeout(() => controller.abort(), 25000);
+      let response;
+      try {
+        response = await fetch("/api/voice", {
+          method: "POST",
+          headers: { ...headers(), "Content-Type": "application/json" },
+          body: JSON.stringify({ text: text.slice(0, 700), humanoid: profile }),
+          signal: controller.signal,
+          cache: "no-store"
+        });
+      } finally { clearTimeout(deadline); }
+      if (!response.ok) throw Error("Voice generation unavailable");
+      if (!response.headers.get("Content-Type")?.startsWith("audio/mpeg"))
+        throw Error("Unexpected voice response");
+      const blob = await response.blob();
+      if (blob.size > 1500000 || blob.size === 0) throw Error("Invalid voice audio");
+      if (!state.tts || controller.signal.aborted || epoch !== voiceEpoch) return;
+      activeAudioURL = URL.createObjectURL(blob);
+      activeAudio = new Audio(activeAudioURL);
+      const media = activeAudio;
+      media.playbackRate = profile === "dirk" ? 0.98 : 1.04;
+      media.onplay = () => setExpression("speaking");
+      media.onended = () => { if (media === activeAudio) stopSpeaking(); };
+      media.onerror = () => { if (media === activeAudio) stopSpeaking(); };
+      await media.play();
+    } catch (error) {
+      if (state.tts && epoch === voiceEpoch && (!controller || !controller.signal.aborted)) {
+        stopSpeaking();
+        speakWithDevice(text);
+      }
+    } finally {
+      if (controller && activeVoiceRequest === controller) activeVoiceRequest = null;
+    }
+  }
   $("tts-button").addEventListener("click", () => {
     state.tts = !state.tts;
-    if (!state.tts && "speechSynthesis" in window) speechSynthesis.cancel();
+    if (!state.tts) stopSpeaking();
     $("tts-button").style.color = state.tts ? "var(--accent)" : "";
-    toast("Voice replies " + (state.tts ? "enabled" : "disabled"));
+    $("tts-button").setAttribute("aria-pressed", String(state.tts));
+    toast("Voice replies " + (state.tts ? "enabled · ElevenLabs Ncodex when connected" : "disabled"));
+    if (state.tts && lastAssistantReply) speak(lastAssistantReply);
   });
   async function research(ticker, assetType = "stock", caller = "research") {
     const body = { ticker, asset_type: assetType, date: new Date().toISOString().slice(0,10) };

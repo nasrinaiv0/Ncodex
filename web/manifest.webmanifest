@@ -4,8 +4,8 @@
   "description": "Mobile-first research, humanoid agent and paper trading.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#101514",
-  "theme_color": "#101514",
+  "background_color": "#0d0e11",
+  "theme_color": "#0d0e11",
   "icons": [
     {
       "src": "/icon.svg",

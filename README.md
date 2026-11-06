@@ -66,6 +66,18 @@ See [Integration Architecture](docs/INTEGRATION.md), [Security & Licensing](docs
 The workspaces, optional ChatGPT research process, scanners and trading engines operate as separate backend processes. Mobile clients never receive credentials to exchanges, ChatGPT sign-in files, or wallet keys.
 
 
+### Shared ElevenLabs voice: Ncodex
+
+Both DIRK and EJ use the saved ElevenLabs cloned voice **Ncodex** (voice ID pinned in \`ncodex/elevenlabs_voice.py\`). Enable it only on a private backend:
+
+\`\`\`env
+NCODEX_ACCESS_TOKEN=your-private-random-owner-token
+ELEVENLABS_API_KEY=your-server-only-key
+NCODEX_ENABLE_ELEVENLABS_VOICE=1
+\`\`\`
+
+The browser never receives the ElevenLabs key. Voice is opt-in from the Chat screen (speaker icon) to avoid unexpected API charges and mobile autoplay issues. Both personas use the same voice but different speaking speeds. Device speech is the fallback if ElevenLabs is disabled or unavailable. See [Voice setup and safeguards](docs/VOICE.md).
+
 ### Two humanoid assistant versions
 
 Users can switch between **DIRK** (charcoal armor, red optical accents, measured risk-and-strategy style) and **EJ** (silver/white shell, graphite details, responsive market-research style) on the Home, Chat or Settings screens. Each version changes the animated humanoid styling, chat labels, introductory guidance and browser text-to-speech rate/pitch. The choice is retained in localStorage as a **non-sensitive UI preference** only. Neither version has special wallet permissions: both share the existing paper-only safety rules and TradingAgents research backend. Colors are solid black, grey, charcoal, red and white (no gradients).
