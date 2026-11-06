@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0e11">
+  <meta name="description" content="Ncodex mobile AI trading research and paper-trading workspace.">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/connect.css">
+  <link rel="stylesheet" href="/humanoids.css">
+  <title>Ncodex · Trading Intelligence</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 18V6l7 8V6l7 12V6"/></svg></span>
+        <div><strong>NCODEX</strong><small>TRADING INTELLIGENCE</small></div>
+      </div>
+      <div class="top-actions">
+        <span class="mode-pill"><span class="status-dot"></span>Paper only</span>
+        <button class="icon-button" id="refresh" aria-label="Refresh dashboard" title="Refresh"><svg viewBox="0 0 24 24"><path d="M20 8a8 8 0 1 0 .2 7M20 3v5h-5"/></svg></button>
+        <button class="icon-button" id="open-settings" aria-label="Open settings"><svg viewBox="0 0 24 24"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.2 2.2m8.4 8.4 2.2 2.2m0-12.8-2.2 2.2M7.8 16.2l-2.2 2.2"/><circle cx="12" cy="12" r="4"/></svg></button>
+      </div>
+    </header>
+    <main id="app-main">
+      <section class="screen active" id="screen-home" data-screen="home">
+        <div class="section-eyebrow">YOUR INTELLIGENCE DESK <span id="utc-time">OFFLINE DEMO</span></div>
+        <div class="hero">
+          <div class="hero-copy">
+            <span class="bot-badge"><span class="status-dot"></span><span id="hero-bot-name">DIRK</span> · TRADING ASSISTANT</span>
+            <h1>Trade with a<br><em>second brain.</em></h1>
+            <p>Eight specialist toolkits. One research assistant. Every trade stays yours to approve.</p>
+            <div class="humanoid-picker" role="group" aria-label="Choose your humanoid trading assistant">
+              <button type="button" class="humanoid-choice selected" data-humanoid="dirk" aria-pressed="true"><span class="choice-index">01</span><span>DIRK<small>Risk &amp; strategy</small></span></button>
+              <button type="button" class="humanoid-choice" data-humanoid="ej" aria-pressed="false"><span class="choice-index">02</span><span>EJ<small>Research &amp; signals</small></span></button>
+            </div>
+            <div class="hero-actions"><button class="primary-button" data-goto="chat"><span id="hero-talk-label" class="cta-label">Talk to Dirk</span> <span aria-hidden="true">↗</span></button><button class="text-button" data-goto="research">Run research</button></div>
+          </div>
+          <div class="humanoid-stage" aria-label="Animated humanoid trading assistant Dirk" id="humanoid-stage">
+            <div class="robot" id="humanoid-avatar" data-expression="idle" aria-hidden="true">
+              <div class="robot-antenna"><span></span></div>
+              <div class="robot-head"><div class="robot-ear left"></div><div class="robot-ear right"></div><div class="robot-face"><div class="robot-brow left"></div><div class="robot-brow right"></div><div class="robot-eyes"><i></i><i></i></div><div class="robot-mouth"></div></div></div>
+              <div class="robot-neck"></div><div class="robot-shoulders"><div class="robot-chest"><span class="robot-emblem" id="robot-emblem">D</span></div></div>
+            </div>
+            <span class="bot-floor"></span>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><span>Paper balance</span><strong id="balance">$0.00</strong><small>Simulated USD</small></div>
+          <div class="stat-card"><span>Realized P&amp;L</span><strong id="pnl">$0.00</strong><small>After simulated fees</small></div>
+          <div class="stat-card"><span>Open positions</span><strong id="position-count">0</strong><small>No live orders</small></div>
+        </div>
+        <div class="section-header"><h2>Command center</h2><span>Research → Review → Simulate</span></div>
+        <div class="action-grid">
+          <button class="action-tile" data-goto="research"><span class="tile-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 5 5M9 11h4m-2-2v4"/></svg></span><b>Analyze a market</b><small>TradingAgents · ChatGPT</small></button>
+          <button class="action-tile" data-goto="trade"><span class="tile-icon"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-9"/><path d="M16 6h5v5"/></svg></span><b>Paper trading</b><small>Test buys, sells &amp; fees</small></button>
+          <button class="action-tile" data-goto="agents"><span class="tile-icon"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="4"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/><path d="M12 3v5"/></svg></span><b>Agent network</b><small>Eight pinned repositories</small></button>
+          <button class="action-tile" data-goto="chat"><span class="tile-icon"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 1-8 8 8.6 8.6 0 0 1-4-.9L3 20l1.9-5A8 8 0 1 1 20 11Z"/></svg></span><b id="action-bot-label">Ask Dirk</b><small>Conversational research</small></button>
+        </div>
+        <div class="footnote">Research signals are not guarantees. Market feeds, exchange connections and live execution are currently disabled.</div>
+      </section>
+
+      <section class="screen" id="screen-research" data-screen="research">
+        <div class="page-head"><span class="section-eyebrow">AI RESEARCH</span><h1>TradingAgents</h1><p>Ask a team of specialized AI analysts to evaluate a stock or cryptocurrency using ChatGPT.</p></div>
+        <div class="panel">
+          <div class="panel-top"><h2>New research</h2><span class="neutral-tag">No trades placed</span></div>
+          <form id="research-form" class="form-stack">
+            <label for="ticker">Symbol</label><input id="ticker" name="ticker" placeholder="e.g. AAPL, NVDA, BTC" maxlength="24" value="AAPL" autocomplete="off" required>
+            <label for="asset-type">Asset class</label><select id="asset-type" name="asset_type"><option value="stock">Stocks</option><option value="crypto">Cryptocurrency</option></select>
+            <button type="submit" class="primary-button wide" id="research-submit">Run AI analysis <span aria-hidden="true">↗</span></button>
+          </form>
+          <div class="inline-note">Requires TradingAgents installed and an authorized ChatGPT subscription on your server. Without it, research remains unavailable.</div>
+          <button class="secondary-button connect-research-link" type="button" data-goto="connect">Connect ChatGPT Plus / Pro →</button>
+        </div>
+        <div class="panel result-panel" id="research-results" aria-live="polite">
+          <div class="panel-top"><h2>Analyst report</h2><span id="research-state" class="neutral-tag">Not started</span></div>
+          <p class="empty-state" id="research-placeholder">Your research summaries and analysts' reasoning will appear here after a successful run.</p>
+          <div id="research-content" hidden></div>
+        </div>
+        <div class="panel"><div class="panel-top"><h2>Research team</h2><span class="neutral-tag">Collaborative</span></div><div class="analyst-list"><span>01 <b>Market analyst</b></span><span>02 <b>Fundamentals</b></span><span>03 <b>Sentiment</b></span><span>04 <b>News &amp; macro</b></span><span>05 <b>Bull vs. bear debate</b></span><span>06 <b>Risk &amp; portfolio review</b></span></div></div>
+      </section>
+
+      <section class="screen" id="screen-trade" data-screen="trade">
+        <div class="page-head"><span class="section-eyebrow">SIMULATION ENGINE</span><h1>Paper trading</h1><p>Practice transaction accounting with synthetic market prices. No real wallet connection or exchange order.</p></div>
+        <div class="paper-summary"><div><small>Available cash</small><b id="trade-cash">$0.00</b></div><div><small>Realized P&amp;L</small><b id="trade-pnl">$0.00</b></div></div>
+        <div class="panel">
+          <div class="panel-top"><h2>Paper wallet</h2><span class="neutral-tag">USD</span></div>
+          <form id="fund-form" class="fund-form"><label class="sr-only" for="deposit-usd">Deposit USD</label><input id="deposit-usd" placeholder="Paper funds in USD" inputmode="decimal" value="1000" required><button class="secondary-button" type="submit">Add funds</button></form>
+        </div>
+        <div class="panel">
+          <div class="panel-top"><h2>Simulation order</h2><span class="mode-pill"><span class="status-dot"></span>Demo token</span></div>
+          <div class="demo-token"><span class="coin-mark">S</span><div><strong>Synthetic SOL test</strong><small>Fixed demo price · not real market data</small></div><b>$1.25</b></div>
+          <div class="tab-switch" role="tablist" aria-label="Order side"><button class="tab selected" id="buy-mode" type="button" aria-selected="true">Buy</button><button class="tab" id="sell-mode" type="button" aria-selected="false">Sell</button></div>
+          <form id="order-form" class="form-stack">
+            <label id="order-amount-label" for="order-amount">Budget in USD (fees included)</label><input id="order-amount" type="text" inputmode="decimal" value="20" required>
+            <label for="order-fee">Simulated fee in USD</label><input id="order-fee" type="text" inputmode="decimal" value="0.01" required>
+            <div class="order-preview" id="order-preview">A fixed synthetic market is used for testing.</div>
+            <label class="check-label"><input type="checkbox" id="order-approval" required><span>I approve this <b>paper-only</b> simulation, not a real order.</span></label>
+            <button type="submit" class="primary-button wide" id="place-paper">Simulate paper buy</button>
+          </form>
+          <div class="inline-note">Accounting uses decimal precision internally. Display values are formatted to two cents without changing stored values.</div>
+        </div>
+        <div class="panel"><div class="panel-top"><h2>Positions</h2><span class="neutral-tag" id="portfolio-position-count">0 open</span></div><div id="positions" class="empty-state">No paper positions yet.</div></div>
+      </section>
+
+      <section class="screen" id="screen-chat" data-screen="chat">
+        <div class="chat-title"><div class="mini-avatar" aria-hidden="true"><span>● ●</span></div><div><h1><span id="chat-bot-name">DIRK</span> <span class="status-dot"></span></h1><small>Your trading research companion</small></div><button id="tts-button" class="icon-button" title="Enable Ncodex voice by ElevenLabs" aria-label="Toggle Ncodex voice replies" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4M17 9a5 5 0 0 1 0 6m2-9a9 9 0 0 1 0 12"/></svg></button></div>
+        <div class="chat-humanoid-switch" role="group" aria-label="Choose active humanoid">
+          <button type="button" data-humanoid="dirk" class="humanoid-choice selected" aria-pressed="true">DIRK <span>· Risk</span></button>
+          <button type="button" data-humanoid="ej" class="humanoid-choice" aria-pressed="false">EJ <span>· Research</span></button>
+        </div>
+        <div class="chat-messages" id="chat-messages" aria-live="polite"><div class="chat-bubble bot-bubble"><b id="initial-bot-label">DIRK</b><p id="initial-bot-message">I'm Dirk, your methodical risk and strategy companion. I can explain market analysis, guide paper trading and help you run TradingAgents research. I can't place real orders.</p></div></div>
+        <div class="chat-chips" id="chat-chips"><button data-prompt="Analyze AAPL">Analyze AAPL</button><button data-prompt="How does the risk engine work?">Risk controls</button><button data-prompt="Show my paper portfolio">My portfolio</button></div>
+        <form id="chat-form" class="chat-composer"><label class="sr-only" for="chat-input">Message to your humanoid assistant</label><input id="chat-input" placeholder="Ask Dirk about trading…" autocomplete="off" maxlength="500" required><button id="mic" type="button" aria-label="Speech to text" title="Speak to active humanoid"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-4 0h8"/></svg></button><button class="send-button" type="submit" aria-label="Send"><svg viewBox="0 0 24 24"><path d="m4 12 16-8-6 16-2-7-8-1Zm8 1 8-9"/></svg></button></form>
+        <p class="chat-disclaimer">The humanoids' guided chat runs locally. Full AI market reports require TradingAgents + ChatGPT authorization on the host.</p>
+      </section>
+
+      <section class="screen" id="screen-agents" data-screen="agents">
+        <div class="page-head"><span class="section-eyebrow">OPEN SOURCE NETWORK</span><h1>Eight engines.<br>One desk.</h1><p>Source repositories are pinned independently. Integration status reflects actual connectivity, not implied capabilities.</p></div>
+        <div class="agent-list">
+          <div class="agent-item"><div class="agent-icon">G</div><div><b>GMGN Skills</b><small>Token intelligence &amp; on-chain scanning</small></div><span>Pinned</span></div>
+          <div class="agent-item"><div class="agent-icon">C</div><div><b>Chainstack Bot</b><small>Solana launch and activity watcher</small></div><span>Pinned</span></div>
+          <div class="agent-item"><div class="agent-icon">S</div><div><b>Sol Trade SDK</b><small>Isolated Solana execution reference</small></div><span>Disabled</span></div>
+          <div class="agent-item"><div class="agent-icon">E</div><div><b>ElizaOS</b><small>AI memory and context framework</small></div><span>Pinned</span></div>
+          <div class="agent-item"><div class="agent-icon">A</div><div><b>OpenAlice</b><small>Research management and approvals</small></div><span>Pinned</span></div>
+          <div class="agent-item"><div class="agent-icon">M</div><div><b>Engineering Skills</b><small>Testing, code review and workflows</small></div><span>Pinned</span></div>
+          <div class="agent-item"><div class="agent-icon">T</div><div><b>TradingAgents</b><small>ChatGPT-backed multi-agent research</small></div><span id="ta-status">Checking</span></div>
+          <div class="agent-item"><div class="agent-icon">F</div><div><b>Freqtrade</b><small>Dry-run and strategy experiments</small></div><span id="ft-status">Checking</span></div>
+        </div>
+        <div class="panel"><div class="panel-top"><h2>Control plane</h2><span class="neutral-tag">Secure by default</span></div><p class="body-copy">Dirk and EJ can explain signals and request research. It cannot sign trades, bypass risk gates, withdraw funds or enable live execution. You remain the decision-maker.</p></div>
+      </section>
+
+      <section class="screen" id="screen-connect" data-screen="connect" aria-label="Connect ChatGPT subscription">
+        <div class="connect-layout">
+          <div class="connect-topline">
+            <span class="connect-eyebrow"><span class="connect-led" aria-hidden="true"></span> SECURE PROVIDER CONNECTION</span>
+            <button class="connect-back" type="button" data-goto="settings" aria-label="Back to settings">← Back</button>
+          </div>
+          <div class="connect-headline">
+            <div class="connect-glyph" aria-hidden="true">
+              <svg viewBox="0 0 64 64"><path d="M32 7 17 16v17l15 9 15-9V16L32 7Zm0 35v15M17 33 4 41m43-8 13 8M17 16 5 9m42 7L59 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="32" r="6" fill="currentColor"/></svg>
+            </div>
+            <span class="connect-plan">CHATGPT PLUS &amp; PRO</span>
+            <h1>Connect your<br><span>intelligence.</span></h1>
+            <p>Link your ChatGPT subscription to TradingAgents, so Dirk or EJ can request research from its specialist AI team.</p>
+          </div>
+          <div class="connect-provider-card">
+            <div class="connect-provider-top">
+              <div class="connect-provider-icon" aria-hidden="true">✳</div>
+              <div class="connect-provider-info"><strong>ChatGPT</strong><span>Subscription authentication</span></div>
+              <span class="connect-status" id="connect-status" aria-live="polite">CHECKING</span>
+            </div>
+            <div class="connect-rule"></div>
+            <div class="connect-account-info" id="connect-account-info">Dirk and EJ use TradingAgents for research. No password or secret is entered in Ncodex.</div>
+            <button class="connect-primary" id="chatgpt-start" type="button" disabled>
+              Continue with ChatGPT <span aria-hidden="true">↗</span>
+            </button>
+            <p class="connect-hint" id="connect-notice" role="status" aria-live="polite">Checking connection prerequisites…</p>
+            <div class="connect-auth-flow" id="connect-auth-flow" hidden>
+              <div class="connect-flow-banner"><span class="connect-led" aria-hidden="true"></span><strong>Authorization ready</strong></div>
+              <p>1. Sign in on the official OpenAI page using your ChatGPT Plus or Pro account and approve plan access for TradingAgents.</p>
+              <a id="connect-auth-link" class="connect-auth-link" href="https://auth.openai.com" target="_blank" rel="noopener noreferrer">Open official ChatGPT sign-in <span aria-hidden="true">↗</span></a>
+              <p>2. If the browser cannot open the return address at <code>127.0.0.1</code>, copy the full URL from the address bar and paste it here. Never paste it into public chat.</p>
+              <form id="chatgpt-callback-form" autocomplete="off">
+                <label for="chatgpt-callback">Final browser return URL</label>
+                <input id="chatgpt-callback" type="url" inputmode="url" autocapitalize="off" spellcheck="false" autocomplete="off" placeholder="http://127.0.0.1:…/auth/callback?code=…" required>
+                <button class="connect-secondary" id="chatgpt-finish" type="submit">Complete secure connection</button>
+              </form>
+            </div>
+            <div class="connect-connected" id="connect-connected" hidden>
+              <div class="connect-check" aria-hidden="true">✓</div>
+              <div><strong>Authorization saved on the server</strong><span>Your next research request will verify access. No real trades can be placed.</span></div>
+            </div>
+            <button class="connect-disconnect" id="chatgpt-disconnect" type="button" hidden>Disconnect ChatGPT</button>
+          </div>
+          <div class="connect-steps">
+            <div><span>01</span><strong>Authorize</strong><small>Official OpenAI sign-in</small></div>
+            <div><span>02</span><strong>Connect</strong><small>Return to your secure host</small></div>
+            <div><span>03</span><strong>Research</strong><small>Analyst reports only</small></div>
+          </div>
+          <div class="connect-setup">
+            <strong>Owner setup required</strong>
+            <p>If your server has not enabled this feature, install TradingAgents and configure <code>NCODEX_ACCESS_TOKEN</code> and <code>NCODEX_ENABLE_CHATGPT_CONNECT=1</code>. You can also sign in on the host using <code>tradingagents login chatgpt</code>.</p>
+            <p class="connect-security">Ncodex never asks for your ChatGPT password, stores your session in browser storage, or grants your subscription access to real trading.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-settings" data-screen="settings">
+        <div class="page-head"><span class="section-eyebrow">CONTROL &amp; PRIVACY</span><h1>Settings</h1><p>Manage the local mobile terminal and inspect integration readiness.</p></div>
+        <div class="panel"><div class="panel-top"><h2>Connection</h2><span class="mode-pill"><span class="status-dot"></span>Paper-only</span></div><label for="access-token">Server access token</label><input id="access-token" type="password" autocomplete="off" placeholder="Only if your server requires one"><p class="inline-note">Kept in temporary page memory. Never sent to TradingAgents or stored in localStorage. Use an HTTPS reverse proxy on remote deployments.</p><button id="save-token" class="secondary-button" type="button">Use token for this session</button></div>
+        <div class="panel"><div class="panel-top"><h2>Connectivity</h2><span class="neutral-tag" id="connection-label">Checking</span></div><div class="connection-rows"><div><span>TradingAgents + ChatGPT</span><b id="settings-ta">Unknown</b></div><div><span>Freqtrade dry-run</span><b id="settings-ft">Unknown</b></div><div><span>ElevenLabs voice · Ncodex</span><b id="settings-voice">Checking</b></div><div><span>Live wallet execution</span><b>Off</b></div><div><span>Ledger audit</span><b id="ledger-status">Checking</b></div></div><button class="secondary-button" id="check-status">Check connections</button></div>
+        <div class="panel"><div class="panel-top"><h2>Humanoid assistant</h2><span class="neutral-tag">Two versions</span></div><p class="body-copy">Choose between Dirk (risk and strategy) and EJ (market research and signals). Both use the same secure paper-only trading engine.</p><div class="settings-humanoid-switch" role="group" aria-label="Choose humanoid version"><button type="button" class="humanoid-choice selected" aria-pressed="true" data-humanoid="dirk">DIRK <small>Charcoal / Red</small></button><button type="button" class="humanoid-choice" aria-pressed="false" data-humanoid="ej">EJ <small>White / Graphite</small></button></div></div>
+        <div class="panel"><div class="panel-top"><h2>Humanoid voice</h2><span class="neutral-tag">ElevenLabs</span></div><p class="body-copy">Dirk and EJ share the saved <b>Ncodex</b> voice from ElevenLabs. Dirk speaks more deliberately; EJ speaks slightly faster. Enable voice replies in Chat. When ElevenLabs is unavailable, compatible devices use their built-in speech voice.</p><p class="inline-note">This requires server-side ELEVENLABS_API_KEY and NCODEX_ENABLE_ELEVENLABS_VOICE=1. Voice generation may incur ElevenLabs usage charges.</p></div>
+        <div class="panel"><div class="panel-top"><h2>ChatGPT subscription</h2><span class="neutral-tag">Owner only</span></div><p class="body-copy">Connect your Plus or Pro subscription through the official OpenAI sign-in, using TradingAgents on your server.</p><button class="secondary-button" type="button" data-goto="connect">Open ChatGPT connection →</button></div>
+      </section>
+    </main>
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-item selected" data-goto="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v11H3V10Zm7 11v-8h4v8"/></svg><span>Home</span></button>
+      <button class="nav-item" data-goto="research"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg><span>Research</span></button>
+      <button class="nav-item nav-humanoid" data-goto="chat"><span class="nav-humanoid-circle"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="6"/><path d="M12 3v4M8 13h1m6 0h1M9 17h6"/></svg></span><span id="nav-bot-label">DIRK</span></button>
+      <button class="nav-item" data-goto="trade"><svg viewBox="0 0 24 24"><path d="m3 18 6-6 4 3 8-9m-5 0h5v5"/></svg><span>Trade</span></button>
+      <button class="nav-item" data-goto="agents"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="7" height="7" rx="1"/><rect x="13" y="5" width="7" height="7" rx="1"/><rect x="4" y="14" width="7" height="7" rx="1"/><rect x="13" y="14" width="7" height="7" rx="1"/></svg><span>Agents</span></button>
+    </nav>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+  <script src="/app.js" defer></script>
+  <script src="/connect.js" defer></script>
+</body>
+</html>

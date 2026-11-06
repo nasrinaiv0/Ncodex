@@ -1,0 +1,24 @@
+name: Ncodex Core Tests
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false # never run unreviewed upstream install hooks
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile
+        run: python -m compileall -q ncodex
+      - name: Offline tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Validate mobile JavaScript
+        run: node --check web/app.js && node --check web/connect.js && node --check web/sw.js && node --test tests/test_humanoids.mjs

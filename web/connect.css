@@ -1,0 +1,74 @@
+/* ChatGPT subscription connection — obsidian, charcoal, graphite, white, signal red. */
+#screen-connect{--connect-bg:#0d0e10;--connect-panel:#191b1f;--connect-border:#36383d;--connect-ink:#fafafa;--connect-muted:#a2a6ac;--connect-red:#e85c56;--connect-red-dark:#452b2c;max-width:720px;margin:0 auto;color:var(--connect-ink)}
+.connect-layout{padding:0 0 28px}
+.connect-topline{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:4px 0 34px}
+.connect-eyebrow{font-size:10px;letter-spacing:.18em;font-weight:780;color:#cbd0d4;display:inline-flex;align-items:center;gap:8px}
+.connect-led{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--connect-red);box-shadow:0 0 0 4px #e85c5619;flex-shrink:0}
+.connect-back{background:#202125;color:#e9eaed;border:1px solid var(--connect-border);border-radius:10px;padding:9px 12px;font-size:11px;font-weight:700}
+.connect-headline{position:relative;margin-bottom:24px}
+.connect-glyph{width:61px;height:61px;border-radius:17px;background:#28292d;border:1px solid #565961;color:#e6e6e7;display:grid;place-items:center;margin-bottom:25px}
+.connect-glyph svg{width:40px;height:40px;stroke-width:2}
+.connect-plan{font-size:10px;color:var(--connect-red);font-weight:800;letter-spacing:.18em}
+.connect-headline h1{font-size:clamp(36px,6vw,57px);line-height:1.07;letter-spacing:-.065em;margin:11px 0 15px;font-weight:750}
+.connect-headline h1 span{color:#b2b3b9}
+.connect-headline>p{color:#b8bdc3;max-width:470px;font-size:13px;line-height:1.72;margin:0}
+.connect-provider-card{border-radius:23px;background:var(--connect-panel);border:1px solid #3b3c40;padding:23px;box-shadow:0 15px 50px #0002}
+.connect-provider-top{display:flex;align-items:center;gap:12px}
+.connect-provider-icon{width:49px;height:49px;border-radius:14px;background:#e7e7e8;color:#212124;display:grid;place-items:center;font-size:26px;font-weight:bold;flex-shrink:0}
+.connect-provider-info{display:flex;flex-direction:column;min-width:0;flex:1;gap:4px}
+.connect-provider-info strong{font-size:16px}
+.connect-provider-info span{font-size:11px;color:#9ea2a8;line-height:1.35}
+.connect-status{font-size:9px;font-weight:800;letter-spacing:.075em;padding:7px 9px;border:1px solid #55565b;border-radius:7px;color:#d3d3d3;white-space:nowrap}
+.connect-status[data-state="connected"]{border-color:#8b5e60;background:#42262a;color:#ffe6e3}
+.connect-status[data-state="awaiting_callback"]{color:#f8bdb8;border-color:#875353}
+.connect-rule{height:1px;background:#36383d;margin:21px 0}
+.connect-account-info{font-size:12px;color:#c1c5c9;line-height:1.65;overflow-wrap:anywhere;margin:0 0 18px}
+.connect-primary{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:49px;padding:12px 19px;border:0;border-radius:12px;background:#f0f1f2;color:#111215;font-size:13px;font-weight:810;letter-spacing:.005em}
+.connect-primary span{font-size:20px;font-weight:400;line-height:1}
+.connect-primary:not(:disabled):hover{background:#fff}
+.connect-primary:disabled{opacity:.48;cursor:not-allowed}
+.connect-hint{font-size:11px;color:#a9acb2;text-align:center;line-height:1.5;margin:12px 0 0}
+.connect-auth-flow{background:#111216;border:1px solid #555055;border-radius:14px;padding:17px;margin-top:18px}
+.connect-flow-banner{display:flex;gap:9px;align-items:center;margin-bottom:10px;font-size:12px}
+.connect-auth-flow p{color:#bec0c5;font-size:11px;line-height:1.65;margin:10px 0 15px}
+.connect-auth-flow code,.connect-setup code{font-size:11px;color:#f0c1bd;overflow-wrap:anywhere}
+.connect-auth-link{display:flex;justify-content:center;align-items:center;gap:8px;padding:13px 15px;border:1px solid #e4716d;background:#3d2427;border-radius:11px;color:#fff;text-decoration:none;font-size:12px;font-weight:780;text-align:center}
+.connect-auth-link:hover{background:#563033}
+#chatgpt-callback-form{display:flex;flex-direction:column;gap:9px;margin-top:13px}
+#chatgpt-callback-form label{font-size:11px;color:#c9ced0;font-weight:650}
+#chatgpt-callback{width:100%;border:1px solid #5c5e64;outline:0;background:#222329;color:#f7f7fa;border-radius:10px;padding:13px 11px;font-size:12px;min-width:0}
+#chatgpt-callback:focus{border-color:#e4726c;box-shadow:0 0 0 2px #e4726c27}
+#chatgpt-callback::placeholder{color:#82848d}
+.connect-secondary{border:1px solid #6d4d4c;color:#fff;background:#472c2d;border-radius:11px;min-height:43px;font-size:12px;font-weight:750;margin-top:2px}
+.connect-secondary:hover{background:#5a3333}
+.connect-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.connect-steps>div{border:1px solid #36373e;background:#181a1c;border-radius:14px;padding:17px 12px;display:flex;flex-direction:column;gap:8px}
+.connect-steps span{font-size:12px;color:#e78780;font-weight:800}
+.connect-steps strong{font-size:12px;color:#f3f3f4}
+.connect-steps small{font-size:10px;line-height:1.45;color:#a0a3ab}
+.connect-setup{border-top:1px solid #383b3f;margin-top:24px;padding-top:19px}
+.connect-setup strong{font-size:12px;color:#e8e8e9}
+.connect-setup p{font-size:11px;color:#9fa3aa;line-height:1.75;margin-top:8px}
+.connect-setup .connect-security{border-left:2px solid #e47873;padding-left:12px;margin-top:18px;color:#bec0c6}
+.connect-connected{display:flex;gap:13px;margin-top:17px;background:#1f2625;border:1px solid #4d5a55;border-radius:12px;padding:15px}
+.connect-check{color:#f8d3ce;background:#4b292b;border:1px solid #9b6966;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;flex-shrink:0;font-size:14px}
+.connect-connected>div:last-child{display:flex;flex-direction:column;gap:5px}
+.connect-connected strong{font-size:12px}
+.connect-connected span{font-size:11px;color:#c0c2c7;line-height:1.5}
+.connect-disconnect{border:1px solid #9f5b5a;color:#ffc4bf;background:transparent;border-radius:10px;margin-top:15px;padding:10px 13px;font-weight:700;font-size:11px}
+.connect-auth-flow[hidden],.connect-connected[hidden],.connect-disconnect[hidden]{display:none!important}
+.connect-research-link{margin-top:13px}
+@media(max-width:600px){
+  .connect-topline{margin:2px 0 26px}
+  .connect-glyph{width:53px;height:53px;margin-bottom:19px}.connect-glyph svg{width:34px;height:34px}
+  .connect-headline h1{font-size:clamp(35px,10vw,45px)}
+  .connect-headline>p{font-size:12px}
+  .connect-provider-card{padding:16px;border-radius:18px}
+  .connect-provider-icon{height:43px;width:43px;font-size:23px}
+  .connect-provider-info strong{font-size:14px}
+  .connect-provider-info span{font-size:10px}
+  .connect-status{font-size:8px;letter-spacing:0;padding:5px}
+  .connect-steps>div{padding:13px 9px}.connect-steps small{font-size:9px}
+  .connect-steps{gap:7px}
+}
+

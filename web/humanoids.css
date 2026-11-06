@@ -1,0 +1,103 @@
+/* Ncodex humanoids: two distinct robot versions. No gradients. */
+/* Shared graphite, charcoal, red, white and grey visual language. */
+:root {
+  --bg:#0d0e11; --surface:#18191d; --elevated:#222329;
+  --outline:#3b3c43; --text:#f1f2f4; --sub:#a8abb4;
+  --accent:#ea6762; --accent-deep:#b34b48; --red:#f4756e;
+}
+body[data-humanoid="dirk"] { --accent:#f0736c; --accent-deep:#c45651; }
+body[data-humanoid="ej"] { --accent:#ededf0; --accent-deep:#c6c8cd; }
+body { background:var(--bg); color:var(--text); }
+.topbar,.bottom-nav {background:#111216;border-color:#35363d}
+.hero,.stat-card,.panel,.agent-item,.action-tile,.icon-button {background:var(--surface);border-color:var(--outline)}
+.hero h1 em {color:var(--accent)}
+.mode-pill { background:#302426;color:#ffe4e3; }
+.status-dot {background:#ef7771;box-shadow:0 0 0 3px #f173701b}
+.primary-button { color:#111116; }
+.primary-button:hover { background:#fff;border-color:#fff; }
+.action-tile:hover {border-color:#8d6a6a;background:#27272b}
+.action-tile .tile-icon { background:#312b2e; }
+.text-button:hover,.nav-item.selected {color:var(--accent)}
+.nav-humanoid-circle {background:var(--accent);color:#16171a}
+.brand-icon {background:#23252b;color:#ef7771;border-color:#474950}
+.bot-floor {background:#767780}
+.robot { transition:filter .25s ease; }
+.robot-antenna { background:#999ba3; }
+.robot-antenna span {background:#ec6963;border-color:#43464c}
+.robot-head { transition:background .35s,border-color .35s,border-radius .35s; }
+.robot-face {transition:background .35s,border-color .35s;}
+.robot-eyes i {transition:width .3s,height .3s,background .3s,border-radius .3s; }
+.robot-mouth {border-color:#ed7b73}
+.robot[data-expression="speaking"] .robot-mouth {background:#ee7770}
+.robot-brow {background:#bfc1c7}
+.robot-neck {background:#54555b}
+.robot-emblem {border-color:#9a5b5a;background:#292025}
+.robot-ear {background:#2e3036;border-color:#65666c}
+.humanoid-picker {display:flex;align-items:stretch;gap:8px;margin-top:18px;max-width:336px;position:relative;z-index:3}
+.humanoid-choice {cursor:pointer;background:#1d1e23;border:1px solid #45454e;border-radius:12px;color:#d5d5da;display:inline-flex;align-items:center;gap:9px;text-align:left;min-width:0;min-height:48px;padding:8px 12px;font-size:12px;font-weight:800;letter-spacing:.025em;transition:border-color .2s,background .2s,transform .2s}
+.humanoid-picker .humanoid-choice {flex:1;}
+.humanoid-choice:hover {border-color:#a2a3a8;transform:translateY(-1px)}
+.humanoid-choice.selected {background:#342629;border-color:#e67872;color:#fff;box-shadow:inset 0 0 0 1px #e678721c}
+body[data-humanoid="ej"] .humanoid-choice.selected {background:#35353b;border-color:#d7d8dc;color:#fff}
+.choice-index {width:25px;height:25px;display:grid;place-items:center;flex:none;border:1px solid #575860;border-radius:8px;color:#f08c84;font-size:9px;font-weight:850}
+body[data-humanoid="ej"] .humanoid-choice.selected .choice-index {color:#f5f5f8;border-color:#acadb3}
+.humanoid-choice small {display:block;font-size:9px;font-weight:530;color:#afb1b9;letter-spacing:0;margin-top:2px;white-space:nowrap}
+.hero-actions {margin-top:16px;}
+.primary-button .cta-label {font-size:inherit;margin-left:0;letter-spacing:0}
+.chat-humanoid-switch,.settings-humanoid-switch {display:flex;gap:8px;flex-wrap:wrap;margin:11px 0 17px;}
+.chat-humanoid-switch .humanoid-choice {min-height:38px;padding:8px 13px;gap:4px;flex:1;justify-content:center;}
+.chat-humanoid-switch .humanoid-choice span {font-size:10px;color:#bbbcc4;font-weight:500;}
+.settings-humanoid-switch .humanoid-choice {flex:1;}
+.settings-humanoid-switch small {margin-left:4px;display:inline;color:#aeb0ba;font-size:10px;}
+.mini-avatar {background:#303138!important;color:#fff!important;border-color:#76777f!important;}
+.chat-title h1 { color:#f1f2f4 }
+.connect-provider-card {background:#18191d;}
+/* Version 01 — DIRK: armored charcoal guardian with red slit optics. */
+body[data-humanoid="dirk"] .robot-head {background:#56575d;border-color:#85868e;border-radius:35px 36px 51px 51px;}
+body[data-humanoid="dirk"] .robot-face {background:#0e0f12;border-color:#9a5350;border-radius:21px 21px 35px 35px;}
+body[data-humanoid="dirk"] .robot-eyes {gap:16px;margin-top:52px;}
+body[data-humanoid="dirk"] .robot-eyes i {width:38px;height:17px;border-radius:8px;background:#ff746f;box-shadow:0 0 12px #f0666261;}
+body[data-humanoid="dirk"] .robot-brow {background:#c26d69;top:38px;}
+body[data-humanoid="dirk"] .robot-mouth {border-color:#bf8582;width:26px;}
+body[data-humanoid="dirk"] .robot-shoulders {background:#494a50;border-color:#77787f;border-radius:55px 55px 22px 22px;}
+body[data-humanoid="dirk"] .robot-chest {background:#24252a;border:1px solid #765454;border-radius:12px 12px 0 0;}
+body[data-humanoid="dirk"] .robot-emblem {color:#ff8179;background:#262025;border-color:#cb6963;}
+body[data-humanoid="dirk"] .robot-neck {background:#45454a;}
+body[data-humanoid="dirk"] .robot-ear {background:#2b2b30;border-color:#95615e;}
+/* Version 02 — EJ: silver-white modular explorer with soft eyes and red instrumentation. */
+body[data-humanoid="ej"] .robot-head {background:#dedee1;border-color:#9a9ca5;border-radius:62px 62px 38px 38px;}
+body[data-humanoid="ej"] .robot-face {background:#24252c;border-color:#a9abb4;border-radius:44px 44px 28px 28px;}
+body[data-humanoid="ej"] .robot-eyes {gap:32px;margin-top:46px;}
+body[data-humanoid="ej"] .robot-eyes i {width:24px;height:29px;border-radius:50%;background:#f6f7fb;box-shadow:0 0 10px #f2f2f477;}
+body[data-humanoid="ej"] .robot-brow {background:#e1e2e8;top:32px;opacity:.7;}
+body[data-humanoid="ej"] .robot-mouth {border-color:#ec746b;width:44px;}
+body[data-humanoid="ej"] .robot-shoulders {background:#c5c5cb;border-color:#787983;border-radius:83px 83px 27px 27px;}
+body[data-humanoid="ej"] .robot-chest {background:#5a5b64;border:1px solid #aaaab3;border-radius:34px 34px 5px 5px;}
+body[data-humanoid="ej"] .robot-emblem {background:#f0f0f3;color:#ad4b48;border-color:#cb6d67;}
+body[data-humanoid="ej"] .robot-neck {background:#9b9ba3;}
+body[data-humanoid="ej"] .robot-ear {background:#65656e;border-color:#babac2;}
+body[data-humanoid="ej"] .robot-antenna span {background:#f7f7f8;border-color:#d96c65;}
+body[data-humanoid="ej"] .robot-mouth {height:12px;}
+body[data-humanoid="ej"] .robot[data-expression="speaking"] .robot-mouth {background:#ee7571;}
+@media(max-width:650px){
+  .humanoid-picker {gap:5px;margin-top:15px;max-width:260px;}
+  .humanoid-picker .humanoid-choice {padding:6px 7px;gap:5px;min-height:43px;}
+  .humanoid-picker .choice-index {width:20px;height:21px;font-size:8px;}
+  .humanoid-picker .humanoid-choice small {font-size:8px;}
+  .hero-actions {margin-top:12px;}
+  .chat-humanoid-switch {margin-top:12px;}
+}
+@media(max-width:390px){
+  .humanoid-picker {max-width:200px;}
+  .humanoid-picker .humanoid-choice {padding:6px;min-height:39px;}
+  .humanoid-picker .humanoid-choice small {font-size:7px;white-space:normal;}
+  .humanoid-picker .choice-index {display:none;}
+  .hero .hero-actions {gap:6px;}
+  .hero .hero-actions .primary-button {padding:9px 10px;}
+  .settings-humanoid-switch .humanoid-choice {font-size:10px;}
+  .settings-humanoid-switch small {font-size:9px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .humanoid-choice,.robot-head,.robot-face,.robot-eyes i {transition:none!important;}
+}
+
