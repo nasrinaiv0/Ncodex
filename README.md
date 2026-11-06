@@ -59,11 +59,16 @@ The evaluator requires verified security attributes (liquidity, concentration, h
 
 See [Integration Architecture](docs/INTEGRATION.md), [Security & Licensing](docs/SECURITY.md), and [Sources](docs/SOURCES.md).
 
-## Mobile humanoid assistant (NOVA)
+## Mobile humanoid assistants (DIRK and EJ)
 
-**NOVA is a mobile-first progressive web app**, not eight complete desktop frameworks running on the phone. It provides an animated humanoid trading-research companion, voice input where supported by the browser, optional spoken replies, market research, paper-trading accounting, and an integrations dashboard. It uses plain HTML/CSS/JavaScript; no build tool is required for the mobile interface.
+**Ncodex is a mobile-first progressive web app**, not eight complete desktop frameworks running on the phone. It provides an animated humanoid trading-research companion, voice input where supported by the browser, optional spoken replies, market research, paper-trading accounting, and an integrations dashboard. It uses plain HTML/CSS/JavaScript; no build tool is required for the mobile interface.
 
 The workspaces, optional ChatGPT research process, scanners and trading engines operate as separate backend processes. Mobile clients never receive credentials to exchanges, ChatGPT sign-in files, or wallet keys.
+
+
+### Two humanoid assistant versions
+
+Users can switch between **DIRK** (charcoal armor, red optical accents, measured risk-and-strategy style) and **EJ** (silver/white shell, graphite details, responsive market-research style) on the Home, Chat or Settings screens. Each version changes the animated humanoid styling, chat labels, introductory guidance and browser text-to-speech rate/pitch. The choice is retained in localStorage as a **non-sensitive UI preference** only. Neither version has special wallet permissions: both share the existing paper-only safety rules and TradingAgents research backend. Colors are solid black, grey, charcoal, red and white (no gradients).
 
 ### Launch the local mobile server
 
@@ -106,9 +111,9 @@ Ncodex only queries `show_config` and `status` and refuses to report a LIVE Freq
 
 ### Interfaces
 
-- **Home:** premium compact portfolio summary and animated NOVA humanoid.
+- **Home:** premium compact portfolio summary and animated DIRK/EJ humanoid selector.
 - **Research:** ChatGPT-connected TradingAgents research requests with analyst reports, no orders.
-- **NOVA chat:** guided local conversation with research handoff, speech-to-text (browser support dependent) and optional TTS.
+- **DIRK/EJ chat:** guided local conversation with research handoff, speech-to-text (browser support dependent) and optional TTS.
 - **Paper trading:** synthetic demo asset, human approval, decimal-precision double-entry ledger, FIFO positions and realized P&L.
 - **Agents:** 8 source repositories and honest real-time connection statuses.
 - **Settings:** local session token and diagnostics.

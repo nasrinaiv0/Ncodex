@@ -168,10 +168,10 @@ input::placeholder { color: #74847a; }
 .nav-item { border: 0; background: none; color: #91a097; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; font-size: 10px; font-weight: 650; min-width: 0; }
 .nav-item svg { width: 22px; height: 22px; }
 .nav-item.selected { color: var(--accent); }
-.nav-nova { position: relative; top: -17px; }
-.nav-nova-circle { background: var(--accent); color: #11251a; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 18px; border: 5px solid var(--bg); }
-.nav-nova-circle svg { width: 26px; height: 26px; }
-.nav-nova span:last-child { margin-top: -4px; }
+.nav-humanoid { position: relative; top: -17px; }
+.nav-humanoid-circle { background: var(--accent); color: #11251a; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 18px; border: 5px solid var(--bg); }
+.nav-humanoid-circle svg { width: 26px; height: 26px; }
+.nav-humanoid span:last-child { margin-top: -4px; }
 .sr-only { clip: rect(0,0,0,0); clip-path: inset(50%); position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; }
 .toast { position: fixed; bottom: calc(92px + env(safe-area-inset-bottom)); left: 50%; transform: translate(-50%, 15px); background: #e7f5e3; color: #18301a; padding: 12px 18px; border-radius: 13px; max-width: min(90vw,450px); box-shadow: 0 10px 24px #0005; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; text-align: center; z-index: 100; font-size: 12px; font-weight: 700; }
 .toast.visible { transform: translate(-50%, 0); opacity: 1; }

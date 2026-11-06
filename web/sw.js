@@ -1,5 +1,5 @@
-const CACHE = "ncodex-ui-v2";
-const STATIC = ["/", "/index.html", "/styles.css", "/connect.css", "/app.js", "/connect.js", "/icon.svg", "/manifest.webmanifest"];
+const CACHE = "ncodex-ui-v3";
+const STATIC = ["/", "/index.html", "/styles.css", "/connect.css", "/humanoids.css", "/app.js", "/connect.js", "/icon.svg", "/manifest.webmanifest"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)));
   self.skipWaiting();

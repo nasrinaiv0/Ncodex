@@ -1,7 +1,24 @@
 "use strict";
 (() => {
   const $ = (id) => document.getElementById(id);
-  const state = { screen: "home", side: "buy", token: "", paper: null, tts: false, listening: false, busy: false };
+  function savedHumanoid() {
+    // Only the cosmetic preference is saved; never persist account secrets.
+    try { return localStorage.getItem("ncodex.humanoid.v1") === "ej" ? "ej" : "dirk"; }
+    catch { return "dirk"; }
+  }
+  const state = { screen: "home", side: "buy", token: "", paper: null, tts: false, listening: false, busy: false, humanoid: savedHumanoid() };
+  const humanoids = {
+    dirk: {
+      name: "DIRK", title: "Risk & strategy", emblem: "D",
+      greeting: "I'm Dirk, your disciplined risk and strategy companion. I can explain market analysis, guide paper trades, and request TradingAgents reports. I never place real orders.",
+      switched: "Dirk online. I'll focus on risk, capital protection and clear trade plans. Our trades remain paper-only."
+    },
+    ej: {
+      name: "EJ", title: "Research & signals", emblem: "E",
+      greeting: "I'm EJ, your curious market research companion. I help compare signals, explore tokens and request TradingAgents reports. No live quotes or real orders are connected.",
+      switched: "EJ online. I'll focus on research, market signals and alternative viewpoints. I'll never invent live prices."
+    }
+  };
   const money = (v) => {
     const n = Number(v);
     if (!Number.isFinite(n)) return "—";
@@ -28,8 +45,41 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove("visible"), 3400);
   }
+  function setHumanoid(version, announce = false) {
+    if (!Object.prototype.hasOwnProperty.call(humanoids, version)) return;
+    const changed = version !== state.humanoid;
+    state.humanoid = version;
+    const bot = humanoids[version];
+    document.body.dataset.humanoid = version;
+    for (const button of document.querySelectorAll("[data-humanoid]")) {
+      const active = button.dataset.humanoid === version;
+      button.classList.toggle("selected", active);
+      button.setAttribute("aria-pressed", String(active));
+    }
+    const texts = {
+      "hero-bot-name": bot.name, "chat-bot-name": bot.name,
+      "nav-bot-label": bot.name, "action-bot-label": "Ask " + bot.name,
+      "hero-talk-label": "Talk to " + bot.name,
+      "robot-emblem": bot.emblem, "initial-bot-label": bot.name,
+      "initial-bot-message": bot.greeting
+    };
+    for (const [id, text] of Object.entries(texts)) {
+      const node = $(id);
+      if (node) node.textContent = text;
+    }
+    const stage = $("humanoid-stage");
+    if (stage) stage.setAttribute("aria-label", "Animated humanoid trading assistant " + bot.name);
+    const input = $("chat-input");
+    if (input) input.placeholder = "Ask " + bot.name + " about trading…";
+    try { localStorage.setItem("ncodex.humanoid.v1", version); } catch {}
+    if (announce && changed && state.screen === "chat") chatBubble("bot", bot.switched);
+  }
+  document.querySelectorAll("button[data-humanoid]").forEach(button => {
+    button.addEventListener("click", () => setHumanoid(button.dataset.humanoid, true));
+  });
+  setHumanoid(state.humanoid);
   function setExpression(expression) {
-    const face = $("nova-avatar");
+    const face = $("humanoid-avatar");
     if (face) face.dataset.expression = expression;
   }
   function navigate(page) {
@@ -213,7 +263,7 @@
     const wrap = document.createElement("div");
     wrap.className = "chat-bubble " + (role === "bot" ? "bot-bubble" : "user-bubble");
     const label = document.createElement("b");
-    label.textContent = role === "bot" ? "NOVA" : "YOU";
+    label.textContent = role === "bot" ? humanoids[state.humanoid].name : "YOU";
     const p = document.createElement("p");
     p.textContent = message;
     wrap.append(label,p);
@@ -224,7 +274,8 @@
     if (!state.tts || !("speechSynthesis" in window)) return;
     speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text.slice(0, 1400));
-    utterance.rate = 1.05;
+    utterance.rate = state.humanoid === "dirk" ? 0.94 : 1.08;
+    utterance.pitch = state.humanoid === "dirk" ? 0.88 : 1.12;
     utterance.onstart = () => setExpression("speaking");
     utterance.onend = () => setExpression("idle");
     utterance.onerror = () => setExpression("idle");
@@ -242,7 +293,7 @@
     if (caller === "research") {
       $("research-state").textContent = "Running";
       $("research-placeholder").hidden = false;
-      $("research-placeholder").textContent = "TradingAgents research is running. You can keep this page open while NOVA prepares the report.";
+      $("research-placeholder").textContent = "TradingAgents research is running. You can keep this page open while your humanoid prepares the report.";
       $("research-content").hidden = true;
     }
     setExpression("thinking");
@@ -301,7 +352,10 @@
   function localResponse(question) {
     const q = question.toLowerCase();
     if (/\b(risk|safe|honeypot|rug|security)\b/.test(q)) {
-      return "The Ncodex risk engine blocks missing or stale data, flagged honeypots, enabled mint/freeze authorities, concentrated ownership, low liquidity and excessive trade size. Passing these checks does NOT mean a token is safe or profitable.";
+      return (state.humanoid === "dirk"
+        ? "Risk first: preserve capital and verify every input. "
+        : "Research check: compare security findings across sources before trusting any signal. ")
+        + "The Ncodex risk engine blocks missing or stale data, flagged honeypots, enabled mint/freeze authorities, concentrated ownership, low liquidity and excessive trade size. Passing these checks does NOT mean a token is safe or profitable.";
     }
     if (/\b(portfolio|balance|funds|positions|profit|pnl)\b/.test(q)) {
       if (!state.paper) return "I can't read your paper portfolio yet. Check the connection in Settings.";
@@ -316,7 +370,7 @@
     if (/\b(freqtrade|backtest|strategy|machine learning)\b/.test(q)) {
       return "Freqtrade offers dry-run strategies, backtesting and optional FreqAI training. This mobile app only monitors a configured dry-run instance. It does not enable exchange orders.";
     }
-    return "I can help with research, risk checks, your paper portfolio, ChatGPT integration, and strategy testing. For a TradingAgents market report, try 'Analyze AAPL' or open Research. My guided chat doesn't fabricate live market prices.";
+    return (state.humanoid === "dirk" ? "My focus is disciplined risk and trade planning. " : "My focus is market research and contrasting viewpoints. ") + "I can help with research, risk checks, your paper portfolio, ChatGPT integration, and strategy testing. For a TradingAgents market report, try 'Analyze AAPL' or open Research. My guided chat doesn't fabricate live market prices.";
   }
   async function sendQuestion(question) {
     const value = question.trim();

@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101514">
+  <meta name="theme-color" content="#0d0e11">
   <meta name="description" content="Ncodex mobile AI trading research and paper-trading workspace.">
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/connect.css">
+  <link rel="stylesheet" href="/humanoids.css">
   <title>Ncodex · Trading Intelligence</title>
 </head>
 <body>
@@ -29,16 +30,20 @@
         <div class="section-eyebrow">YOUR INTELLIGENCE DESK <span id="utc-time">OFFLINE DEMO</span></div>
         <div class="hero">
           <div class="hero-copy">
-            <span class="bot-badge"><span class="status-dot"></span>NOVA · RESEARCH ASSISTANT</span>
+            <span class="bot-badge"><span class="status-dot"></span><span id="hero-bot-name">DIRK</span> · TRADING ASSISTANT</span>
             <h1>Trade with a<br><em>second brain.</em></h1>
             <p>Eight specialist toolkits. One research assistant. Every trade stays yours to approve.</p>
-            <div class="hero-actions"><button class="primary-button" data-goto="chat">Talk to NOVA <span aria-hidden="true">↗</span></button><button class="text-button" data-goto="research">Run research</button></div>
+            <div class="humanoid-picker" role="group" aria-label="Choose your humanoid trading assistant">
+              <button type="button" class="humanoid-choice selected" data-humanoid="dirk" aria-pressed="true"><span class="choice-index">01</span><span>DIRK<small>Risk &amp; strategy</small></span></button>
+              <button type="button" class="humanoid-choice" data-humanoid="ej" aria-pressed="false"><span class="choice-index">02</span><span>EJ<small>Research &amp; signals</small></span></button>
+            </div>
+            <div class="hero-actions"><button class="primary-button" data-goto="chat"><span id="hero-talk-label" class="cta-label">Talk to Dirk</span> <span aria-hidden="true">↗</span></button><button class="text-button" data-goto="research">Run research</button></div>
           </div>
-          <div class="humanoid-stage" aria-label="Animated robot research assistant NOVA">
-            <div class="robot" id="nova-avatar" data-expression="idle" aria-hidden="true">
+          <div class="humanoid-stage" aria-label="Animated humanoid trading assistant Dirk" id="humanoid-stage">
+            <div class="robot" id="humanoid-avatar" data-expression="idle" aria-hidden="true">
               <div class="robot-antenna"><span></span></div>
               <div class="robot-head"><div class="robot-ear left"></div><div class="robot-ear right"></div><div class="robot-face"><div class="robot-brow left"></div><div class="robot-brow right"></div><div class="robot-eyes"><i></i><i></i></div><div class="robot-mouth"></div></div></div>
-              <div class="robot-neck"></div><div class="robot-shoulders"><div class="robot-chest"><span class="robot-emblem">N</span></div></div>
+              <div class="robot-neck"></div><div class="robot-shoulders"><div class="robot-chest"><span class="robot-emblem" id="robot-emblem">D</span></div></div>
             </div>
             <span class="bot-floor"></span>
           </div>
@@ -53,7 +58,7 @@
           <button class="action-tile" data-goto="research"><span class="tile-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 5 5M9 11h4m-2-2v4"/></svg></span><b>Analyze a market</b><small>TradingAgents · ChatGPT</small></button>
           <button class="action-tile" data-goto="trade"><span class="tile-icon"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-9"/><path d="M16 6h5v5"/></svg></span><b>Paper trading</b><small>Test buys, sells &amp; fees</small></button>
           <button class="action-tile" data-goto="agents"><span class="tile-icon"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="4"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/><path d="M12 3v5"/></svg></span><b>Agent network</b><small>Eight pinned repositories</small></button>
-          <button class="action-tile" data-goto="chat"><span class="tile-icon"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 1-8 8 8.6 8.6 0 0 1-4-.9L3 20l1.9-5A8 8 0 1 1 20 11Z"/></svg></span><b>Ask NOVA</b><small>Conversational research</small></button>
+          <button class="action-tile" data-goto="chat"><span class="tile-icon"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 1-8 8 8.6 8.6 0 0 1-4-.9L3 20l1.9-5A8 8 0 1 1 20 11Z"/></svg></span><b id="action-bot-label">Ask Dirk</b><small>Conversational research</small></button>
         </div>
         <div class="footnote">Research signals are not guarantees. Market feeds, exchange connections and live execution are currently disabled.</div>
       </section>
@@ -102,11 +107,15 @@
       </section>
 
       <section class="screen" id="screen-chat" data-screen="chat">
-        <div class="chat-title"><div class="mini-avatar" aria-hidden="true"><span>● ●</span></div><div><h1>NOVA <span class="status-dot"></span></h1><small>Your trading research companion</small></div><button id="tts-button" class="icon-button" title="Toggle speech output" aria-label="Toggle speech output"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4M17 9a5 5 0 0 1 0 6m2-9a9 9 0 0 1 0 12"/></svg></button></div>
-        <div class="chat-messages" id="chat-messages" aria-live="polite"><div class="chat-bubble bot-bubble"><b>NOVA</b><p>Hello. I'm NOVA, your trading research assistant. I can explain market analysis, guide paper trading, and help you run TradingAgents research. I can't independently place real orders.</p></div></div>
+        <div class="chat-title"><div class="mini-avatar" aria-hidden="true"><span>● ●</span></div><div><h1><span id="chat-bot-name">DIRK</span> <span class="status-dot"></span></h1><small>Your trading research companion</small></div><button id="tts-button" class="icon-button" title="Toggle speech output" aria-label="Toggle speech output"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4M17 9a5 5 0 0 1 0 6m2-9a9 9 0 0 1 0 12"/></svg></button></div>
+        <div class="chat-humanoid-switch" role="group" aria-label="Choose active humanoid">
+          <button type="button" data-humanoid="dirk" class="humanoid-choice selected" aria-pressed="true">DIRK <span>· Risk</span></button>
+          <button type="button" data-humanoid="ej" class="humanoid-choice" aria-pressed="false">EJ <span>· Research</span></button>
+        </div>
+        <div class="chat-messages" id="chat-messages" aria-live="polite"><div class="chat-bubble bot-bubble"><b id="initial-bot-label">DIRK</b><p id="initial-bot-message">I'm Dirk, your methodical risk and strategy companion. I can explain market analysis, guide paper trading and help you run TradingAgents research. I can't place real orders.</p></div></div>
         <div class="chat-chips" id="chat-chips"><button data-prompt="Analyze AAPL">Analyze AAPL</button><button data-prompt="How does the risk engine work?">Risk controls</button><button data-prompt="Show my paper portfolio">My portfolio</button></div>
-        <form id="chat-form" class="chat-composer"><label class="sr-only" for="chat-input">Message to NOVA</label><input id="chat-input" placeholder="Ask NOVA anything about trading…" autocomplete="off" maxlength="500" required><button id="mic" type="button" aria-label="Speech to text" title="Speak to NOVA"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-4 0h8"/></svg></button><button class="send-button" type="submit" aria-label="Send"><svg viewBox="0 0 24 24"><path d="m4 12 16-8-6 16-2-7-8-1Zm8 1 8-9"/></svg></button></form>
-        <p class="chat-disclaimer">NOVA's guided chat runs locally. Full AI market reports require TradingAgents + ChatGPT authorization on the host.</p>
+        <form id="chat-form" class="chat-composer"><label class="sr-only" for="chat-input">Message to your humanoid assistant</label><input id="chat-input" placeholder="Ask Dirk about trading…" autocomplete="off" maxlength="500" required><button id="mic" type="button" aria-label="Speech to text" title="Speak to active humanoid"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-4 0h8"/></svg></button><button class="send-button" type="submit" aria-label="Send"><svg viewBox="0 0 24 24"><path d="m4 12 16-8-6 16-2-7-8-1Zm8 1 8-9"/></svg></button></form>
+        <p class="chat-disclaimer">The humanoids' guided chat runs locally. Full AI market reports require TradingAgents + ChatGPT authorization on the host.</p>
       </section>
 
       <section class="screen" id="screen-agents" data-screen="agents">
@@ -121,7 +130,7 @@
           <div class="agent-item"><div class="agent-icon">T</div><div><b>TradingAgents</b><small>ChatGPT-backed multi-agent research</small></div><span id="ta-status">Checking</span></div>
           <div class="agent-item"><div class="agent-icon">F</div><div><b>Freqtrade</b><small>Dry-run and strategy experiments</small></div><span id="ft-status">Checking</span></div>
         </div>
-        <div class="panel"><div class="panel-top"><h2>Control plane</h2><span class="neutral-tag">Secure by default</span></div><p class="body-copy">NOVA can explain signals and request research. It cannot sign trades, bypass risk gates, withdraw funds or enable live execution. You remain the decision-maker.</p></div>
+        <div class="panel"><div class="panel-top"><h2>Control plane</h2><span class="neutral-tag">Secure by default</span></div><p class="body-copy">Dirk and EJ can explain signals and request research. It cannot sign trades, bypass risk gates, withdraw funds or enable live execution. You remain the decision-maker.</p></div>
       </section>
 
       <section class="screen" id="screen-connect" data-screen="connect" aria-label="Connect ChatGPT subscription">
@@ -136,7 +145,7 @@
             </div>
             <span class="connect-plan">CHATGPT PLUS &amp; PRO</span>
             <h1>Connect your<br><span>intelligence.</span></h1>
-            <p>Link your ChatGPT subscription to TradingAgents, so NOVA can request research from its specialist AI team.</p>
+            <p>Link your ChatGPT subscription to TradingAgents, so Dirk or EJ can request research from its specialist AI team.</p>
           </div>
           <div class="connect-provider-card">
             <div class="connect-provider-top">
@@ -145,7 +154,7 @@
               <span class="connect-status" id="connect-status" aria-live="polite">CHECKING</span>
             </div>
             <div class="connect-rule"></div>
-            <div class="connect-account-info" id="connect-account-info">NOVA uses TradingAgents for research. No password or secret is entered in Ncodex.</div>
+            <div class="connect-account-info" id="connect-account-info">Dirk and EJ use TradingAgents for research. No password or secret is entered in Ncodex.</div>
             <button class="connect-primary" id="chatgpt-start" type="button" disabled>
               Continue with ChatGPT <span aria-hidden="true">↗</span>
             </button>
@@ -184,13 +193,14 @@
         <div class="page-head"><span class="section-eyebrow">CONTROL &amp; PRIVACY</span><h1>Settings</h1><p>Manage the local mobile terminal and inspect integration readiness.</p></div>
         <div class="panel"><div class="panel-top"><h2>Connection</h2><span class="mode-pill"><span class="status-dot"></span>Paper-only</span></div><label for="access-token">Server access token</label><input id="access-token" type="password" autocomplete="off" placeholder="Only if your server requires one"><p class="inline-note">Kept in temporary page memory. Never sent to TradingAgents or stored in localStorage. Use an HTTPS reverse proxy on remote deployments.</p><button id="save-token" class="secondary-button" type="button">Use token for this session</button></div>
         <div class="panel"><div class="panel-top"><h2>Connectivity</h2><span class="neutral-tag" id="connection-label">Checking</span></div><div class="connection-rows"><div><span>TradingAgents + ChatGPT</span><b id="settings-ta">Unknown</b></div><div><span>Freqtrade dry-run</span><b id="settings-ft">Unknown</b></div><div><span>Live wallet execution</span><b>Off</b></div><div><span>Ledger audit</span><b id="ledger-status">Checking</b></div></div><button class="secondary-button" id="check-status">Check connections</button></div>
+        <div class="panel"><div class="panel-top"><h2>Humanoid assistant</h2><span class="neutral-tag">Two versions</span></div><p class="body-copy">Choose between Dirk (risk and strategy) and EJ (market research and signals). Both use the same secure paper-only trading engine.</p><div class="settings-humanoid-switch" role="group" aria-label="Choose humanoid version"><button type="button" class="humanoid-choice selected" aria-pressed="true" data-humanoid="dirk">DIRK <small>Charcoal / Red</small></button><button type="button" class="humanoid-choice" aria-pressed="false" data-humanoid="ej">EJ <small>White / Graphite</small></button></div></div>
         <div class="panel"><div class="panel-top"><h2>ChatGPT subscription</h2><span class="neutral-tag">Owner only</span></div><p class="body-copy">Connect your Plus or Pro subscription through the official OpenAI sign-in, using TradingAgents on your server.</p><button class="secondary-button" type="button" data-goto="connect">Open ChatGPT connection →</button></div>
       </section>
     </main>
     <nav class="bottom-nav" aria-label="Main navigation">
       <button class="nav-item selected" data-goto="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v11H3V10Zm7 11v-8h4v8"/></svg><span>Home</span></button>
       <button class="nav-item" data-goto="research"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg><span>Research</span></button>
-      <button class="nav-item nav-nova" data-goto="chat"><span class="nav-nova-circle"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="6"/><path d="M12 3v4M8 13h1m6 0h1M9 17h6"/></svg></span><span>NOVA</span></button>
+      <button class="nav-item nav-humanoid" data-goto="chat"><span class="nav-humanoid-circle"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="6"/><path d="M12 3v4M8 13h1m6 0h1M9 17h6"/></svg></span><span id="nav-bot-label">DIRK</span></button>
       <button class="nav-item" data-goto="trade"><svg viewBox="0 0 24 24"><path d="m3 18 6-6 4 3 8-9m-5 0h5v5"/></svg><span>Trade</span></button>
       <button class="nav-item" data-goto="agents"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="7" height="7" rx="1"/><rect x="13" y="5" width="7" height="7" rx="1"/><rect x="4" y="14" width="7" height="7" rx="1"/><rect x="13" y="14" width="7" height="7" rx="1"/></svg><span>Agents</span></button>
     </nav>

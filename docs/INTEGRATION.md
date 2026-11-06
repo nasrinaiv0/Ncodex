@@ -76,7 +76,7 @@ No API credentials, GMGN HTTP adapter, Chainstack realtime feed, agent hosting, 
 5. Operations: uptime, alerting, trace IDs, reconciliation to on-chain receipts, rollback and incident response.
 
 
-## Mobile NOVA prototype and two new sources
+## Mobile DIRK/EJ prototype and two new sources
 
 ```text
 iPhone / Android / tablet / desktop browser (mobile PWA)
@@ -89,15 +89,15 @@ Ncodex /api endpoint
      |                     |-- multi-agent debate/report
      |                     +-- signal and reports shown as UNVERIFIED research
      |-- /integrations --> read-only Freqtrade (dry_run=true verified first)
-     +-- local guided NOVA chat / TTS / browser STT
+     +-- local guided DIRK/EJ chat / TTS / browser STT
 ```
 
 TradingAgents v0.7.0+ documents ChatGPT Plus/Pro subscription sign-in with `tradingagents login chatgpt` and `llm_provider="chatgpt"`. This access is held by the server user; **Ncodex does not fetch or transfer ChatGPT sign-in tokens**. The adapter uses a background thread and in-memory job state; production needs a durable job queue, per-user authentication and authorization, execution timeouts, per-user isolation, rate limits and cost limits, cancellation and retries.
 
 Freqtrade is a separate Python bot using exchange APIs; its read-only control-plane adapter is intentionally locked to allowlisted GET endpoints. A production gateway must restrict Freqtrade native API credentials, avoid SSRF, bind localhost or HTTPS, and not expose live-trading endpoints.
 
-**Humanoid** refers to the NOVA interface: animated face, speaking expression, accessible text chat, browser speech recognition when available, and optional speech synthesis. It does not imply physical robotics or human-level autonomous trading.
+**Humanoid** refers to the DIRK/EJ selectable interface: animated face, speaking expression, accessible text chat, browser speech recognition when available, and optional speech synthesis. It does not imply physical robotics or human-level autonomous trading.
 
 Mobile PWA shell can be offline-cached, but live research and authoritative ledger operations require the server. The service worker deliberately never caches API responses.
 
-NOVA's guided text replies run locally and use explicitly scripted intent paths; they are not a generative model. Genuine TradingAgents research requires the separate host sign-in. No direct ChatGPT conversation access is claimed.
+DIRK and EJ's guided text replies run locally and use explicitly scripted intent paths; they are not a generative model. Genuine TradingAgents research requires the separate host sign-in. No direct ChatGPT conversation access is claimed.

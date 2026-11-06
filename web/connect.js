@@ -79,7 +79,7 @@
       accountInfo.textContent = (status.account_email ? "ChatGPT account: " + status.account_email + ". " : "")
         + "Saved credentials are private to this TradingAgents server and have not been validated with a research request.";
     } else if (enabled && installed) {
-      accountInfo.textContent = "NOVA will use TradingAgents for analysis only. Your password and subscription tokens are never entered here.";
+      accountInfo.textContent = "Dirk and EJ use TradingAgents for analysis only. Your password and subscription tokens are never entered here.";
     }
 
     const authURL = stage === "awaiting_callback" ? allowedAuthorizeURL(status.authorize_url) : null;

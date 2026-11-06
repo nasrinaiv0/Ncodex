@@ -21,4 +21,4 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Validate mobile JavaScript
-        run: node --check web/app.js && node --check web/connect.js && node --check web/sw.js
+        run: node --check web/app.js && node --check web/connect.js && node --check web/sw.js && node --test tests/test_humanoids.mjs
