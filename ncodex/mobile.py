@@ -149,7 +149,7 @@ class MobileHandler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store" if (content_type.startswith("application/json") or content_type.startswith("audio/")) else "public, max-age=120")
         self.send_header("Content-Security-Policy",
                          "default-src 'self'; connect-src 'self'; img-src 'self' data:; "
-                         "style-src 'self'; script-src 'self'; object-src 'none'; "
+                         "media-src 'self' blob:; style-src 'self'; script-src 'self'; object-src 'none'; "
                          "base-uri 'none'; frame-ancestors 'none'; form-action 'self'")
 
     def _authorized(self) -> bool:

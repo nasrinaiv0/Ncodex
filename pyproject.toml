@@ -11,3 +11,7 @@ dependencies = []
 
 [tool.setuptools.packages.find]
 include = ["ncodex*"]
+
+# Explicit entrypoint: ignore unrelated Python apps in upstream submodules.
+[tool.vercel]
+entrypoint = "app:app"

@@ -1,0 +1,10 @@
+upstream/
+tests/
+docs/
+examples/
+scripts/
+.git/
+*.db
+*.sqlite
+*.sqlite3
+__pycache__/
