@@ -13,3 +13,10 @@
 - OpenAlice is **AGPL-3.0**, which has network-use/source-disclosure obligations. Consult counsel before redistributing a modified or hosted integrated service. The other pinned roots currently indicate MIT or Apache-2.0; verify individual bundled dependencies and notices.
 - License identification is not legal advice. Respect API terms, exchange rules, market-manipulation restrictions, and local financial licensing rules.
 - A user's approval for PAPER trading never grants LIVE trading authority.
+
+- TradingAgents is Apache-2.0. It can use ChatGPT subscription sign-in if installed and authorized by the user on the server; token material must remain server-side and should never be logged or committed.
+- Freqtrade is GPL-3.0; consult licensing counsel for redistributing modified code. Ncodex pins Freqtrade as an independent repository.
+- The mobile server is a **local reference server**. It has a single shared paper ledger, optional shared bearer token and no per-user accounts. It must NOT be publicly deployed as a multitenant trading service without adding user-scoped database access, roles and permissions, TLS termination, CSRF protections, rate limiting, audit logs, hardened authentication and secret management.
+- Public binding requires an access token but is still not a production deployment recommendation. The reference server never has wallet keys; live order submission is not implemented.
+- The browser PWA cache includes only static files. API responses, secret tokens and chat contents are not cached in a service worker.
+- Don't put any real exchange API passwords into the mobile browser; Freqtrade's basic credentials are read from server environment.

@@ -2,7 +2,7 @@
 
 An experimental, **paper-trading-first** integration workspace for Solana token research, launch monitoring, risk assessment, and precision accounting.
 
-Six upstream projects are pinned as **Git submodules**, rather than flattened into one unsafe dependency tree. This allows Ncodex to reference each project's original code, version and license while maintaining its own security boundary.
+Eight upstream projects are pinned as **Git submodules**, rather than flattened into one unsafe dependency tree. This allows Ncodex to reference each project's original code, version and license while maintaining its own security boundary.
 
 > **Not a production trading bot.** No real funds are traded. No wallet keys, broker credentials, paid APIs or network requests are used by the Ncodex Python core. Historical patterns are observational, not financial advice or evidence of predictive performance.
 
@@ -16,8 +16,10 @@ Six upstream projects are pinned as **Git submodules**, rather than flattened in
 | Brain and persistent agent memory | [Eliza](https://github.com/elizaOS/eliza) | Future optional agent runtime; approvals remain outside agent |
 | Research manager and human approvals | [OpenAlice](https://github.com/TraderAlice/OpenAlice) | Optional, separately licensed manager (AGPL-3.0) |
 | Development process and code review | [Matt Pocock's skills](https://github.com/mattpocock/skills) | Optional engineering-agent skills |
+| LLM research, debate, ratings, report memory | [Tauric TradingAgents](https://github.com/TauricResearch/TradingAgents) | Optional ChatGPT-subscription research bridge; human-reviewed |
+| Dry-run crypto strategies, backtesting and FreqAI | [Freqtrade](https://github.com/freqtrade/freqtrade) | Read-only dry-run status connector, no order-control API |
 
-## Clone all six pinned upstreams
+## Clone all eight pinned upstreams
 
 ```bash
 git clone https://github.com/nasrinaiv0/Ncodex.git
@@ -56,3 +58,56 @@ The evaluator requires verified security attributes (liquidity, concentration, h
 5. **Pin and review upstream versions.** Never auto-update dependencies or silently run their setup scripts.
 
 See [Integration Architecture](docs/INTEGRATION.md), [Security & Licensing](docs/SECURITY.md), and [Sources](docs/SOURCES.md).
+
+## Mobile humanoid assistant (NOVA)
+
+**NOVA is a mobile-first progressive web app**, not eight complete desktop frameworks running on the phone. It provides an animated humanoid trading-research companion, voice input where supported by the browser, optional spoken replies, market research, paper-trading accounting, and an integrations dashboard. It uses plain HTML/CSS/JavaScript; no build tool is required for the mobile interface.
+
+The workspaces, optional ChatGPT research process, scanners and trading engines operate as separate backend processes. Mobile clients never receive credentials to exchanges, ChatGPT sign-in files, or wallet keys.
+
+### Launch the local mobile server
+
+```bash
+python -m unittest discover -s tests -v
+python -m ncodex.mobile --host 127.0.0.1 --port 3000 --db paper.db
+# Open http://127.0.0.1:3000 on the same machine
+```
+
+For install-on-home-screen, host the PWA behind an HTTPS origin. On iOS, use Safari > Share > Add to Home Screen. Android browsers support Install app/Add to Home Screen. Remote hosting requires authenticating users, HTTPS reverse proxy, persistence and CSRF/security review; **the local reference server is not production-ready**. Never expose its Python server directly to the public internet.
+
+### Connect TradingAgents to ChatGPT
+
+At the host (not in the phone browser), install TradingAgents and authorize the supported ChatGPT subscription provider:
+
+```bash
+cd upstream/TradingAgents
+python -m venv .venv
+# activate .venv and install the upstream package per its README
+pip install .
+tradingagents login chatgpt
+```
+
+Then run the Ncodex mobile server in the same authorized environment, so it can import TradingAgents and access the local `~/.tradingagents/chatgpt-auth.json` credentials. This is optional and requires **explicit sign-in**. The bridge sets `llm_provider=chatgpt` and disables any live order capability. Your ChatGPT subscription and API key billing are separate authentication options; Ncodex does not collect your ChatGPT password.
+
+### Connect Freqtrade for status only
+
+Configure a Freqtrade instance in **dry-run mode** on the host and add:
+
+```bash
+export FREQTRADE_API_URL=http://127.0.0.1:8080
+export FREQTRADE_API_USER=your-readonly-proxy-username
+export FREQTRADE_API_PASSWORD=your-secret
+```
+
+Ncodex only queries `show_config` and `status` and refuses to report a LIVE Freqtrade bot as safe. Use dedicated least-privilege proxying in a real deployment; Freqtrade's native REST user may have more privileges than this read-only Ncodex integration.
+
+### Interfaces
+
+- **Home:** premium compact portfolio summary and animated NOVA humanoid.
+- **Research:** ChatGPT-connected TradingAgents research requests with analyst reports, no orders.
+- **NOVA chat:** guided local conversation with research handoff, speech-to-text (browser support dependent) and optional TTS.
+- **Paper trading:** synthetic demo asset, human approval, decimal-precision double-entry ledger, FIFO positions and realized P&L.
+- **Agents:** 8 source repositories and honest real-time connection statuses.
+- **Settings:** local session token and diagnostics.
+
+All demo prices and balances are labeled simulated, and live trading is disabled. This is an **early mobile prototype**, not a finished mobile App Store product.

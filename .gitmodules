@@ -16,3 +16,9 @@
 [submodule "upstream/skills"]
 	path = upstream/skills
 	url = https://github.com/mattpocock/skills.git
+[submodule "upstream/TradingAgents"]
+	path = upstream/TradingAgents
+	url = https://github.com/TauricResearch/TradingAgents.git
+[submodule "upstream/freqtrade"]
+	path = upstream/freqtrade
+	url = https://github.com/freqtrade/freqtrade.git

@@ -1,0 +1,17 @@
+{
+  "name": "Ncodex · NOVA Trading Intelligence",
+  "short_name": "Ncodex",
+  "description": "Mobile-first research, humanoid agent and paper trading.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#101514",
+  "theme_color": "#101514",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

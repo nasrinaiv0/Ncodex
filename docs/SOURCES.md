@@ -10,5 +10,7 @@ These SHAs were cloned and inspected in an isolated Vercel sandbox; their pointe
 | elizaOS/eliza | develop | `0594fc72da4450a84a986ad12e730e3faa902018` | MIT |
 | TraderAlice/OpenAlice | master | `57b2f811e9a1a07f6fe9b86b68857e324f610d37` | AGPL-3.0 |
 | mattpocock/skills | main | `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d` | MIT |
+| TauricResearch/TradingAgents | main | `9fa1196fffbcfd9de5146d2dd2869df84ab99838` | Apache-2.0 |
+| freqtrade/freqtrade | develop | `0789f5d5c3e7649e2b83f82d65ecb2e1381f02ad` | GPL-3.0 |
 
 Submodules preserve the upstream Git repository identity and copyright. This page records root licenses at inspection time, **not a complete third-party dependency audit**. Upstream repositories are not automatically updated.
