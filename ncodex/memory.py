@@ -18,13 +18,21 @@ class PatternMemory:
 
     def observe(self, observation_id: str, source: str, mint: str,
                 allowed: bool, reasons: tuple[str, ...]) -> bool:
+        verdict = "paper-eligible" if allowed else "rejected"
+        encoded_reasons = json.dumps(reasons)
         with self.db:
-            cursor = self.db.execute(
-                """INSERT OR IGNORE INTO observations(id,source,mint,verdict,reasons)
-                   VALUES(?,?,?,?,?)""",
-                (observation_id, source, mint, "paper-eligible" if allowed else "rejected",
-                 json.dumps(reasons)))
-            return cursor.rowcount > 0
+            existing = self.db.execute(
+                "SELECT source,mint,verdict,reasons FROM observations WHERE id=?",
+                (observation_id,)).fetchone()
+            record = (source, mint, verdict, encoded_reasons)
+            if existing is not None:
+                if existing != record:
+                    raise ValueError("observation id reused with different content")
+                return False
+            self.db.execute(
+                """INSERT INTO observations(id,source,mint,verdict,reasons)
+                   VALUES(?,?,?,?,?)""", (observation_id, *record))
+            return True
 
     def record_outcome(self, observation_id: str, realized_pnl_usd: object) -> None:
         pnl = Decimal(str(realized_pnl_usd))
@@ -55,3 +63,6 @@ class PatternMemory:
                 data["net_realized_usd"] += amount
         return {source: {**data, "net_realized_usd": str(data["net_realized_usd"])}
                 for source, data in sorted(groups.items())}
+
+    def close(self) -> None:
+        self.db.close()

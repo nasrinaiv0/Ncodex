@@ -2,7 +2,7 @@
 
 ## Data flow (stage 1 implemented / stage 2 future)
 
-\`\`\`text
+```text
 Chainstack listener (separate process) -----+
                                              +--> Normalization/validation (contract)
 GMGN research and security snapshot --------+             |
@@ -18,15 +18,15 @@ GMGN research and security snapshot --------+             |
                                                                 SQLite double-entry FIFO ledger
                                                                                    |
                                                              PatternMemory observations/outcomes
-\`\`\`
+```
 
 OpenAlice can be an **external** research/workflow UI; Eliza can be an **external** context agent. Neither receives signing permission or database write access. sol-trade-sdk stays an isolated future executor, not loaded by the Ncodex core. Matt Pocock's engineering skills are optional developer tooling.
 
 ## Upstream adapter contract
 
-External crawlers/watchers are untrusted. A trusted mapping process must verify and normalize data into the exact keys consumed by \`Candidate.from_mapping\`:
+External crawlers/watchers are untrusted. A trusted mapping process must verify and normalize data into the exact keys consumed by `Candidate.from_mapping`:
 
-\`\`\`json
+```json
 {
   "chain": "solana",
   "mint": "valid-base58-address",
@@ -44,18 +44,20 @@ External crawlers/watchers are untrusted. A trusted mapping process must verify 
     "freeze_authority_disabled": true
   }
 }
-\`\`\`
+```
+
+The offline `watch` command reads newline-delimited normalized candidate JSON and stores deduplicated evaluations in SQLite pattern memory. It never sends orders. Use `--source-file -` to accept JSONL on standard input from a separate, reviewed listener process.
 
 The contract is NOT a claim that raw GMGN or Chainstack payloads already match the schema. A future adapter must verify exact upstream fields and confidence before passing verified data. Missing or malformed data raises and blocks. Token scanners cannot establish safety by themselves.
 
 ## Proposed service boundaries
 
-- \`scanner\`: GMGN API client with quotas, retries, timestamping, verified token addresses. No signing keys.
-- \`watcher\`: Chainstack event listener with deduplication, rate limits, replay/catchup and backpressure. No signing keys.
-- \`brain\`: Eliza external summarizer. No trading permission or self-modifying safety policy.
-- \`manager\`: OpenAlice as separate AGPL-licensed application, optional human review and schedules.
-- \`executor\`: Separate Rust \`sol-trade-sdk\` process **not enabled**, with HSM/signing boundary, authenticated requests, chain-id and quote checks.
-- \`accountant\`: Ncodex ledger, independent of agent-generated prose. FIFO, per-event idempotency and balanced journal.
+- `scanner`: GMGN API client with quotas, retries, timestamping, verified token addresses. No signing keys.
+- `watcher`: Chainstack event listener with deduplication, rate limits, replay/catchup and backpressure. No signing keys.
+- `brain`: Eliza external summarizer. No trading permission or self-modifying safety policy.
+- `manager`: OpenAlice as separate AGPL-licensed application, optional human review and schedules.
+- `executor`: Separate Rust `sol-trade-sdk` process **not enabled**, with HSM/signing boundary, authenticated requests, chain-id and quote checks.
+- `accountant`: Ncodex ledger, independent of agent-generated prose. FIFO, per-event idempotency and balanced journal.
 
 ## Accounting design
 

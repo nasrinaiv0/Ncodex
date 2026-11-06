@@ -7,7 +7,9 @@ from decimal import Decimal
 import json
 import sys
 
+from .feeds import watch_records
 from .ledger import PaperLedger
+from .memory import PatternMemory
 from .pipeline import PaperDesk
 from .schema import Candidate, timestamp
 
@@ -45,6 +47,15 @@ def _parser() -> argparse.ArgumentParser:
     sell.add_argument("--fee-usd", default="0")
     sell.add_argument("--id", required=True)
     sell.add_argument("--approve", action="store_true")
+    watch = sub.add_parser("watch", help="Offline normalized JSONL intake; NO ORDERS")
+    watch.add_argument("--source-file", default="-", help="File or - for stdin")
+    watch.add_argument("--db", default=":memory:")
+    watch.add_argument("--memory-db", required=True)
+    watch.add_argument("--usd", default="10")
+    watch.add_argument("--now")
+    patterns = sub.add_parser("patterns")
+    patterns.add_argument("--db", default=":memory:")
+    patterns.add_argument("--memory-db", required=True)
     summary = sub.add_parser("summary")
     summary.add_argument("--db", required=True)
     return parser
@@ -73,6 +84,29 @@ def main(argv: list[str] | None = None) -> int:
             pnl = ledger.sell(args.id, args.mint, args.qty,
                               args.price_usd, args.fee_usd)
             out = {"mode": "paper", "realized_pnl_usd": str(pnl)}
+        elif args.command == "watch":
+            memory = PatternMemory(args.memory_db)
+            try:
+                if args.source_file == "-":
+                    events = watch_records(sys.stdin, PaperDesk(ledger), memory, args.usd,
+                                           now=timestamp(args.now, "now") if args.now else None)
+                    for event in events:
+                        print(json.dumps(event, sort_keys=True), flush=True)
+                else:
+                    with open(args.source_file, encoding="utf-8") as handle:
+                        events = watch_records(handle, PaperDesk(ledger), memory, args.usd,
+                                               now=timestamp(args.now, "now") if args.now else None)
+                        for event in events:
+                            print(json.dumps(event, sort_keys=True), flush=True)
+            finally:
+                memory.close()
+            return 0
+        elif args.command == "patterns":
+            memory = PatternMemory(args.memory_db)
+            try:
+                out = {"mode": "observational-only", "patterns": memory.report()}
+            finally:
+                memory.close()
         else:
             out = ledger.summary()
         print(json.dumps(out, indent=2, sort_keys=True))
