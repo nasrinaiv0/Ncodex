@@ -22,6 +22,7 @@ from .ledger import PaperLedger
 from .pipeline import PaperDesk
 from .research import TradingAgentsBridge, normalize_research_request
 from .freqtrade_bridge import FreqtradeBridge
+from .chatgpt_connect import ChatGPTSignIn
 from .schema import Candidate, decimal
 
 ASSETS = Path(__file__).resolve().parent.parent / "web"
@@ -29,6 +30,8 @@ DEMO_MINT = "So11111111111111111111111111111111111111112"
 FILE_MIMES = {"/": ("index.html", "text/html; charset=utf-8"),
               "/index.html": ("index.html", "text/html; charset=utf-8"),
               "/styles.css": ("styles.css", "text/css; charset=utf-8"),
+              "/connect.css": ("connect.css", "text/css; charset=utf-8"),
+              "/connect.js": ("connect.js", "text/javascript; charset=utf-8"),
               "/app.js": ("app.js", "text/javascript; charset=utf-8"),
               "/manifest.webmanifest": ("manifest.webmanifest", "application/manifest+json"),
               "/sw.js": ("sw.js", "text/javascript; charset=utf-8"),
@@ -94,12 +97,19 @@ class MobileServer(ThreadingHTTPServer):
     daemon_threads = True
 
     def __init__(self, address, db_path: str, token: str,
-                 research: ResearchJobs | None = None):
+                 research: ResearchJobs | None = None,
+                 chatgpt_signin: ChatGPTSignIn | None = None):
         super().__init__(address, MobileHandler)
         self.db_path = db_path
         self.token = token
         self.paper_lock = threading.Lock()
         self.research = research or ResearchJobs()
+        self.chatgpt_signin = chatgpt_signin or ChatGPTSignIn()
+        # Owner-only feature. A paid plan never authorizes live trades.
+        self.chatgpt_connect_enabled = (
+            bool(token) and len(token) >= 20
+            and os.environ.get("NCODEX_ENABLE_CHATGPT_CONNECT") == "1"
+        )
 
 
 class MobileHandler(BaseHTTPRequestHandler):
@@ -167,7 +177,16 @@ class MobileHandler(BaseHTTPRequestHandler):
         if not self._authorized():
             self._json(401, {"error": "access token required"})
             return
-        if path == "/api/health":
+        if path == "/api/chatgpt/status":
+            result = {"enabled": self.server.chatgpt_connect_enabled}
+            if self.server.chatgpt_connect_enabled:
+                result.update(self.server.chatgpt_signin.status())
+            else:
+                result.update({"flow_status": "unavailable", "session_saved": False,
+                               "installed": self.server.chatgpt_signin.adapter.installed(),
+                               "trading_permissions": "research_only"})
+            self._json(200, result)
+        elif path == "/api/health":
             self._json(200, {"status": "ok", "mode": "paper", "live_trading_enabled": False})
         elif path == "/api/paper":
             with self.server.paper_lock:
@@ -219,6 +238,26 @@ class MobileHandler(BaseHTTPRequestHandler):
             return
         try:
             body = self._body()
+            if path.startswith("/api/chatgpt/"):
+                if not self.server.chatgpt_connect_enabled:
+                    self._json(403, {"error": "ChatGPT connection disabled. Configure owner token and enable the service."})
+                    return
+                if path == "/api/chatgpt/start":
+                    if body.get("approved") is not True:
+                        raise PermissionError("Explicit authorization is required")
+                    self._json(202, self.server.chatgpt_signin.start())
+                    return
+                if path == "/api/chatgpt/complete":
+                    self._json(202, self.server.chatgpt_signin.complete(
+                        body.get("flow_id"), body.get("callback_url")))
+                    return
+                if path == "/api/chatgpt/disconnect":
+                    if body.get("approved") is not True:
+                        raise PermissionError("Confirm account disconnection")
+                    self._json(200, self.server.chatgpt_signin.disconnect())
+                    return
+                self._json(404, {"error": "Unknown ChatGPT action"})
+                return
             if path == "/api/research":
                 ticker, day, asset_type = normalize_research_request(body)
                 if not self.server.research.runner.status()["ready_to_attempt"]:
@@ -266,8 +305,15 @@ class MobileHandler(BaseHTTPRequestHandler):
             self._json(200, output)
         except (ValueError, PermissionError, TypeError, json.JSONDecodeError) as exc:
             self._json(400, {"error": str(exc)})
-        except RuntimeError:
-            self._json(409, {"error": "research is already in progress"})
+        except RuntimeError as exc:
+            if path.startswith("/api/chatgpt/"):
+                message = str(exc)
+                if "installed" in message:
+                    self._json(503, {"error": "TradingAgents must be installed on the server first"})
+                else:
+                    self._json(409, {"error": "A ChatGPT sign-in is active or the connection is unavailable"})
+            else:
+                self._json(409, {"error": "research is already in progress"})
 
 
 def main(argv=None):

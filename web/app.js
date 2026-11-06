@@ -50,15 +50,16 @@
   document.querySelectorAll("[data-goto]").forEach(el => el.addEventListener("click", () => navigate(el.dataset.goto)));
   window.addEventListener("hashchange", () => {
     const name = location.hash.slice(1);
-    if (["home", "research", "trade", "chat", "agents", "settings"].includes(name)) navigate(name);
+    if (["home", "research", "trade", "chat", "agents", "settings", "connect"].includes(name)) navigate(name);
   });
   const startPage = location.hash.slice(1);
-  if (["home", "research", "trade", "chat", "agents", "settings"].includes(startPage)) navigate(startPage);
+  if (["home", "research", "trade", "chat", "agents", "settings", "connect"].includes(startPage)) navigate(startPage);
   $("open-settings").addEventListener("click", () => navigate("settings"));
   $("save-token").addEventListener("click", () => {
     state.token = $("access-token").value.trim();
     $("access-token").value = "";
     toast("Token held only in this page session.");
+    window.dispatchEvent(new Event("ncodex:access-changed"));
     refresh();
   });
   $("check-status").addEventListener("click", refresh);
@@ -371,4 +372,6 @@
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
     navigator.serviceWorker.register("/sw.js").catch(() => {});
   }
+  window.ncodexAPI = api;
+  window.ncodexNavigate = navigate;
 })();

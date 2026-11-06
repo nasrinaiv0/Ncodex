@@ -8,6 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/connect.css">
   <title>Ncodex · Trading Intelligence</title>
 </head>
 <body>
@@ -66,7 +67,8 @@
             <label for="asset-type">Asset class</label><select id="asset-type" name="asset_type"><option value="stock">Stocks</option><option value="crypto">Cryptocurrency</option></select>
             <button type="submit" class="primary-button wide" id="research-submit">Run AI analysis <span aria-hidden="true">↗</span></button>
           </form>
-          <div class="inline-note">Requires TradingAgents installed and a ChatGPT sign-in on the server. Without it, research stays unavailable rather than showing fabricated results.</div>
+          <div class="inline-note">Requires TradingAgents installed and an authorized ChatGPT subscription on your server. Without it, research remains unavailable.</div>
+          <button class="secondary-button connect-research-link" type="button" data-goto="connect">Connect ChatGPT Plus / Pro →</button>
         </div>
         <div class="panel result-panel" id="research-results" aria-live="polite">
           <div class="panel-top"><h2>Analyst report</h2><span id="research-state" class="neutral-tag">Not started</span></div>
@@ -122,11 +124,67 @@
         <div class="panel"><div class="panel-top"><h2>Control plane</h2><span class="neutral-tag">Secure by default</span></div><p class="body-copy">NOVA can explain signals and request research. It cannot sign trades, bypass risk gates, withdraw funds or enable live execution. You remain the decision-maker.</p></div>
       </section>
 
+      <section class="screen" id="screen-connect" data-screen="connect" aria-label="Connect ChatGPT subscription">
+        <div class="connect-layout">
+          <div class="connect-topline">
+            <span class="connect-eyebrow"><span class="connect-led" aria-hidden="true"></span> SECURE PROVIDER CONNECTION</span>
+            <button class="connect-back" type="button" data-goto="settings" aria-label="Back to settings">← Back</button>
+          </div>
+          <div class="connect-headline">
+            <div class="connect-glyph" aria-hidden="true">
+              <svg viewBox="0 0 64 64"><path d="M32 7 17 16v17l15 9 15-9V16L32 7Zm0 35v15M17 33 4 41m43-8 13 8M17 16 5 9m42 7L59 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="32" r="6" fill="currentColor"/></svg>
+            </div>
+            <span class="connect-plan">CHATGPT PLUS &amp; PRO</span>
+            <h1>Connect your<br><span>intelligence.</span></h1>
+            <p>Link your ChatGPT subscription to TradingAgents, so NOVA can request research from its specialist AI team.</p>
+          </div>
+          <div class="connect-provider-card">
+            <div class="connect-provider-top">
+              <div class="connect-provider-icon" aria-hidden="true">✳</div>
+              <div class="connect-provider-info"><strong>ChatGPT</strong><span>Subscription authentication</span></div>
+              <span class="connect-status" id="connect-status" aria-live="polite">CHECKING</span>
+            </div>
+            <div class="connect-rule"></div>
+            <div class="connect-account-info" id="connect-account-info">NOVA uses TradingAgents for research. No password or secret is entered in Ncodex.</div>
+            <button class="connect-primary" id="chatgpt-start" type="button" disabled>
+              Continue with ChatGPT <span aria-hidden="true">↗</span>
+            </button>
+            <p class="connect-hint" id="connect-notice" role="status" aria-live="polite">Checking connection prerequisites…</p>
+            <div class="connect-auth-flow" id="connect-auth-flow" hidden>
+              <div class="connect-flow-banner"><span class="connect-led" aria-hidden="true"></span><strong>Authorization ready</strong></div>
+              <p>1. Sign in on the official OpenAI page using your ChatGPT Plus or Pro account and approve plan access for TradingAgents.</p>
+              <a id="connect-auth-link" class="connect-auth-link" href="https://auth.openai.com" target="_blank" rel="noopener noreferrer">Open official ChatGPT sign-in <span aria-hidden="true">↗</span></a>
+              <p>2. If the browser cannot open the return address at <code>127.0.0.1</code>, copy the full URL from the address bar and paste it here. Never paste it into public chat.</p>
+              <form id="chatgpt-callback-form" autocomplete="off">
+                <label for="chatgpt-callback">Final browser return URL</label>
+                <input id="chatgpt-callback" type="url" inputmode="url" autocapitalize="off" spellcheck="false" autocomplete="off" placeholder="http://127.0.0.1:…/auth/callback?code=…" required>
+                <button class="connect-secondary" id="chatgpt-finish" type="submit">Complete secure connection</button>
+              </form>
+            </div>
+            <div class="connect-connected" id="connect-connected" hidden>
+              <div class="connect-check" aria-hidden="true">✓</div>
+              <div><strong>Authorization saved on the server</strong><span>Your next research request will verify access. No real trades can be placed.</span></div>
+            </div>
+            <button class="connect-disconnect" id="chatgpt-disconnect" type="button" hidden>Disconnect ChatGPT</button>
+          </div>
+          <div class="connect-steps">
+            <div><span>01</span><strong>Authorize</strong><small>Official OpenAI sign-in</small></div>
+            <div><span>02</span><strong>Connect</strong><small>Return to your secure host</small></div>
+            <div><span>03</span><strong>Research</strong><small>Analyst reports only</small></div>
+          </div>
+          <div class="connect-setup">
+            <strong>Owner setup required</strong>
+            <p>If your server has not enabled this feature, install TradingAgents and configure <code>NCODEX_ACCESS_TOKEN</code> and <code>NCODEX_ENABLE_CHATGPT_CONNECT=1</code>. You can also sign in on the host using <code>tradingagents login chatgpt</code>.</p>
+            <p class="connect-security">Ncodex never asks for your ChatGPT password, stores your session in browser storage, or grants your subscription access to real trading.</p>
+          </div>
+        </div>
+      </section>
+
       <section class="screen" id="screen-settings" data-screen="settings">
         <div class="page-head"><span class="section-eyebrow">CONTROL &amp; PRIVACY</span><h1>Settings</h1><p>Manage the local mobile terminal and inspect integration readiness.</p></div>
         <div class="panel"><div class="panel-top"><h2>Connection</h2><span class="mode-pill"><span class="status-dot"></span>Paper-only</span></div><label for="access-token">Server access token</label><input id="access-token" type="password" autocomplete="off" placeholder="Only if your server requires one"><p class="inline-note">Kept in temporary page memory. Never sent to TradingAgents or stored in localStorage. Use an HTTPS reverse proxy on remote deployments.</p><button id="save-token" class="secondary-button" type="button">Use token for this session</button></div>
         <div class="panel"><div class="panel-top"><h2>Connectivity</h2><span class="neutral-tag" id="connection-label">Checking</span></div><div class="connection-rows"><div><span>TradingAgents + ChatGPT</span><b id="settings-ta">Unknown</b></div><div><span>Freqtrade dry-run</span><b id="settings-ft">Unknown</b></div><div><span>Live wallet execution</span><b>Off</b></div><div><span>Ledger audit</span><b id="ledger-status">Checking</b></div></div><button class="secondary-button" id="check-status">Check connections</button></div>
-        <div class="panel"><h2>ChatGPT sign-in</h2><p class="body-copy">On your server, install TradingAgents and run <code>tradingagents login chatgpt</code> to authorize your subscription. This app never asks for your ChatGPT password or session token.</p></div>
+        <div class="panel"><div class="panel-top"><h2>ChatGPT subscription</h2><span class="neutral-tag">Owner only</span></div><p class="body-copy">Connect your Plus or Pro subscription through the official OpenAI sign-in, using TradingAgents on your server.</p><button class="secondary-button" type="button" data-goto="connect">Open ChatGPT connection →</button></div>
       </section>
     </main>
     <nav class="bottom-nav" aria-label="Main navigation">
@@ -139,5 +197,6 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </div>
   <script src="/app.js" defer></script>
+  <script src="/connect.js" defer></script>
 </body>
 </html>

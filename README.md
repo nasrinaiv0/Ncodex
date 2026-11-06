@@ -77,6 +77,9 @@ For install-on-home-screen, host the PWA behind an HTTPS origin. On iOS, use Saf
 
 ### Connect TradingAgents to ChatGPT
 
+The mobile app now includes a dedicated owner-only **Connect ChatGPT** screen under **Settings** and **Research**, with an official OpenAI sign-in link and a mobile callback-paste step. See [ChatGPT subscription authorization](docs/CHATGPT_CONNECT.md) for setup and security requirements.
+
+
 At the host (not in the phone browser), install TradingAgents and authorize the supported ChatGPT subscription provider:
 
 ```bash
