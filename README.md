@@ -131,3 +131,7 @@ Ncodex only queries `show_config` and `status` and refuses to report a LIVE Freq
 - **Settings:** local session token and diagnostics.
 
 All demo prices and balances are labeled simulated, and live trading is disabled. This is an **early mobile prototype**, not a finished mobile App Store product.
+
+### Vercel deployment
+
+Vercel hosts the mobile frontend through the explicit app.py WSGI entrypoint. Stateful paper accounts, ChatGPT OAuth and paid voice must run on a **persistent owner-authenticated backend**; Vercel forwards API calls only when NCODEX_BACKEND_URL is configured. Until then APIs fail closed with 503, rather than falsely recording transactions. See [Vercel deployment and security](docs/VERCEL.md).
