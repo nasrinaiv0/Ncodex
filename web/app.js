@@ -41,7 +41,7 @@
       n.classList.toggle("selected", active);
       if (active) n.setAttribute("aria-current", "page"); else n.removeAttribute("aria-current");
     });
-    if (page === "chat") setExpression("speaking"); else setExpression("idle");
+    setExpression("idle");
     if (page === "trade") showOrderPreview();
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;

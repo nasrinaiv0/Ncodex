@@ -5,6 +5,7 @@ import threading
 from http.client import HTTPConnection
 from pathlib import Path
 import unittest
+from decimal import Decimal
 from unittest.mock import patch
 
 from ncodex.mobile import MobileServer, ResearchJobs, sample_candidate
@@ -73,7 +74,7 @@ class MobileAPITests(unittest.TestCase):
             {"id": "buy-mobile", "usd": "20", "fee_usd": "0.01",
              "candidate_id": "demo-sol", "approved": True})
         self.assertEqual(status, 200)
-        self.assertEqual(data["summary"]["cash_usd"], "80.00")
+        self.assertEqual(Decimal(data["summary"]["cash_usd"]), Decimal("80.00"))
         qty = data["quantity"]
         status, data = self.request("POST", "/api/paper/sell",
             {"id": "sell-mobile", "qty": qty, "price_usd": "1.5",
